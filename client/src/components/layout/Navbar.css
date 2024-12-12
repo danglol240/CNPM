@@ -1,0 +1,95 @@
+.navbar{
+    width: 100%;
+    background:transparent;
+    height: 70px;
+    position: absolute;
+    left: 0;
+    top: 0;
+    display: flex;
+    flex-direction: row;
+    color: white;
+    justify-content: space-between;
+    font-family: Montserrat; 
+    font-optical-sizing: auto;
+    font-weight: 500;
+    font-style: normal;
+}
+.icon-nav-all{
+    width: 100%;
+    text-align: left;
+    padding-left: 30px;
+    display: flex;
+    flex-direction: row;
+}
+.icon-nav{
+    width: 50px; 
+    height: 50px; 
+    border-radius: 50%; 
+    object-fit: cover;
+    margin-top: 10px;
+    margin-left: 25px;
+    margin-right: 10px;
+}
+.navbar h1{
+    text-align: left;
+    padding-top: 22px;
+    padding-bottom: 10px;
+    font-size: 20px;
+}
+.option-nav li{
+    list-style-type: none;
+    text-align: center;
+    font-size: 20px;
+    cursor: pointer;
+    width: 100px;
+    height: 100px;
+    padding-top: 20px;
+    /* display: flex;
+    flex-direction: column;
+    justify-content: center; */
+    font-weight: bold;
+    display: block;
+}
+.active-link{
+    color: aquamarine;
+}
+.inactive-link{
+    color: white;
+    text-decoration:none ;
+}
+.option-nav{
+    display: flex;
+    flex-direction: row;
+    gap: 5px;
+}
+.btn-nav{
+    height: 50px;
+    margin-top: 7px;
+    margin-left: 5px;
+    margin-right: 30px;
+    font-size: 20px;
+    /*font-weight: bold;*/
+    border-radius: 10px;
+    font-family: Montserrat;
+    font-optical-sizing: auto;
+    font-weight: 500;
+    font-style: normal;
+}
+.logout{
+    background-color: transparent;
+    font-family: Montserrat;
+    font-optical-sizing: auto;
+    font-weight: 500;
+    font-style: normal;
+}
+.arrow{
+    margin-left: 15px;
+}
+.option-child{
+    font-weight: lighter !important;
+    margin-top: -0px;
+}
+.option-parent{
+    margin-top: -35px;
+    margin-bottom: -30px;
+}

@@ -1,0 +1,45 @@
+.form-edit-people{
+    display: flex;
+    justify-content: space-around;
+    gap: 30px;
+    padding: 0px 30px;
+}
+.edit-people-child{
+    background-color: white;
+    display: flex;
+    flex-direction: column;
+    width: 100%;
+    height: 100%;
+    animation: fadeIn 0.5s both;
+    padding: 10px;
+    overflow: auto;
+    gap: 20px;
+    padding: 20px;
+}
+.edit-people-child h2{
+    text-align: center;
+    font-size: 35px;
+}
+.edit-people-child h3{
+    font-size: 22px;
+}
+.title-edit-people{
+    width: 100%;
+    flex-direction: column;
+}
+.form-edit-people-child{
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+}
+.form-edit-people-child label{
+    font-weight: bold;
+    font-size: 18px;
+}
+.table-edit-people th{
+    width: 213.85px;
+}
+.table-edit-people td{
+    width: 213.85px;
+}

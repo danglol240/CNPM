@@ -1,0 +1,19 @@
+.add-fee-form .ant-form-item {
+    margin-bottom: 16px;
+  }
+  
+  .add-fee-form-button {
+    margin-right: 8px;
+  }
+  
+  .add-fee-form .ant-input,
+  .add-fee-form .ant-select-selector {
+    padding: 8px;
+    border-radius: 4px;
+    border: 1px solid #ccc;
+  }
+  
+  .add-fee-form .ant-picker {
+    width: 100%;
+  }
+  

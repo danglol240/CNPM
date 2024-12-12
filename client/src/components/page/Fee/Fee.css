@@ -1,0 +1,7 @@
+.th-fee{
+    width: calc((100vw - 560px) / 5.5);
+    text-align: center;
+    border: 1px solid #7f7f7f;
+    padding: 10px;
+    font-size: 20px;
+}

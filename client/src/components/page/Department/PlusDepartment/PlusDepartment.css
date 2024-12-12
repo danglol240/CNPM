@@ -1,0 +1,95 @@
+.plus-department{
+    background-color: rgba(0, 0, 0, 0.258);
+    height: 100%;
+    width: 100%;
+    position: fixed;
+    top: 0;
+    left: 0;
+    z-index: 100;
+    padding: 50px;
+    padding-left: 500px;
+    padding-right: 500px;
+    object-fit: cover;
+}
+.plus-department-child{
+    width: 100%;
+    height: 100%;
+    background-color: white;
+    animation: fadeIn 0.5s both;
+    padding: 10px;
+    display: flex;
+    overflow: hidden;
+    gap: 20px;
+    border-radius: 20px;
+    object-fit: cover;
+}
+.form-plus-department{
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+    padding-top: 30px;
+    overflow-y: scroll;
+    object-fit: cover;
+}
+.form-plus-department-2{
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+    overflow-y: scroll;
+}
+.img-plus-department{
+    flex: 1;
+    width: 60%;
+    object-fit: cover;
+    border-radius: 10px;
+}
+.form-plus-department h2{
+    text-align: center;
+    font-size: 35px;
+}
+.form-plus-department-2 h2{
+    text-align: center;
+    font-size: 35px;
+}
+.form-plus-department .title-input-plus-department{
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+}
+.form-plus-department .title-input-plus-department label{
+    font-size: 18px;
+    font-weight: bold;
+}
+.form-plus-department-2 .title-input-plus-department label{
+    font-size: 18px;
+    font-weight: bold;
+}
+.btn-plus-department-all{
+    display: flex;
+    justify-content: space-around;
+}
+.btn-plus-child-1{
+    width: 150px;
+    font-weight: bold;
+    font-size: 20px;
+    height: 40px;
+    border-radius: 15px;
+}
+.btn-plus-child-2{
+    width: 150px;
+    font-weight: bold;
+    font-size: 20px;
+    height: 40px;
+    border-radius: 15px;
+    background-color: red;
+}
+@keyframes fadeIn {
+    from {
+      opacity: 0;
+    }
+    to {
+      opacity: 1;
+    }
+  }
