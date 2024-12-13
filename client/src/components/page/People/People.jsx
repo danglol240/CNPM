@@ -14,6 +14,8 @@ const People = () => {
   const [openPlus, setOpenPlus] = useState(false);
   const [openEdit, setOpenEdit] = useState(false);
   const [editData, setEditData] = useState([]);
+  const [dataPeople, setDataPeople] = useState([]);
+  const [retryCount, setRetryCount] = useState(0);
 
   const formatDate = (dateString) => {
     // Kiểm tra nếu chuỗi rỗng hoặc không hợp lệ
@@ -33,9 +35,22 @@ const People = () => {
       } catch (error) {
         console.error("Error fetching data: ", error);
       }
+      try {
+        const response = await axios.get("http://localhost:8080/people");
+        setDataPeople(response.data.data);
+        setRetryCount(0); // Reset retry count on successful fetch
+      } catch (err) {
+        console.log("Lỗi: ", err);
+        if (retryCount < 3) {
+          // Giới hạn số lần thử lại
+          setTimeout(() => {
+            setRetryCount(retryCount + 1);
+          }, 3000); // Thử lại sau 3 giây
+        }
+      }
     };
     fetchData();
-  }, []);
+  }, [retryCount]);
   console.log(dataDepartment);
 
   const toggleDropdown = () => setIsOpen(!isOpen);
@@ -133,6 +148,11 @@ const People = () => {
       )}
       <div className="department">
         <h2>Dân cư</h2>
+        <div className="people">
+          <div className="depart-statistical">
+            <p>Tổng dân cư sinh sống : {dataPeople.length}</p>
+          </div>
+        </div>
         <Button
           className="btn-plus-department"
           type="primary"

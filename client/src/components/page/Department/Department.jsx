@@ -110,6 +110,32 @@ const Department = () => {
     });
   };
 
+  const [dataDepartmentEmpty, setDataDepartmentEmpty] = useState([]);
+  const [retryCount, setRetryCount] = useState(0);
+
+  useEffect(() => {
+    const fetchData = async () => {
+      try {
+        const { data } = await axios.get("http://localhost:8080/department");
+        setDataDepartment(data.data);
+        setDataDepartmentEmpty(
+          data.data.filter((item) => item.status === "Trống")
+        );
+        setRetryCount(0); // Reset retry count on successful fetch
+      } catch (err) {
+        console.log("Lỗi: ", err);
+        if (retryCount < 3) {
+          // Giới hạn số lần thử lại
+          setTimeout(() => {
+            setRetryCount(retryCount + 1);
+          }, 3000); // Thử lại sau 3 giây
+        }
+      }
+    };
+    fetchData();
+  }, [retryCount]);
+
+
   return (
     <div className="department-all">
       {openPlus && <PlusDepartment onClickPlus={onClickPlus} />}
@@ -121,6 +147,14 @@ const Department = () => {
       )}
       <div className="department">
         <h2>Căn hộ</h2>
+        <div className="depart-2">
+        <div className="depart-statistical">
+          <p>Tổng số căn hộ : {dataDepartment.length}</p>
+        </div>
+        <div className="depart-statistical">
+          <p>Số căn hộ còn trống : {dataDepartmentEmpty.length}</p>
+        </div>
+      </div>
         <Button
           className="btn-plus-department"
           type="primary"

@@ -55,16 +55,6 @@ const Home = () => {
             Địa chỉ: Bách Khoa - Hai Bà Trưng - Hà Nội
           </p>
         </div>
-        <div className="img-home">
-          <img
-            //src="/pic/pexels.jpeg"
-            //alt="apartment"
-          />
-          <img
-            //src="/pic/pexels-photo-323705.webp"
-            //alt="apartment"
-          />
-        </div>
       </div>
     </div>
   );

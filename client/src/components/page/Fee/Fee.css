@@ -1,4 +1,138 @@
+.fee-all{
+    background: url("pic/home.jpg");
+    padding: 20px;
+    height: 100vh;
+    font-family: Montserrat; 
+    font-optical-sizing: auto;
+    font-weight: 500;
+    font-style: normal;
+}
+.btn-plus-fee{ 
+    height: 40px;
+    font-size: 17px;
+    font-weight: bold;
+    width: 200px;
+}
+.icon-btn-plus-fee{
+    margin-bottom: -4px;
+    margin-right: 5px;
+}
+.fee{
+    margin-top: 4%;
+    border: 2px solid rgb(119, 119, 119);
+    border-radius: 10px;
+    box-shadow: 0px 0px 5px 2px rgba(0, 0, 0, 0.512);
+    padding: 10px;
+    height: 93%;
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+    background: transparent;
+    backdrop-filter: blur(20px);
+}
+.fee h2{
+    text-align: center;
+    font-size: 30px;
+    color: whitesmoke;
+}
+.search-fee{
+    display: flex;
+    gap: 30px;
+    justify-content: space-around;
+}
+
+.dropdown-container {
+    position: relative;
+    display: inline-block;
+}
+
+.dropdown-button {
+    background-color: rgb(239, 239, 239);
+    color: white;
+    width: 180px;
+    padding: 10px;
+    border: none;
+    cursor: pointer;
+    font-size: 16px;
+    border-radius: 5px;
+    outline: none;
+    color: black;
+    border: 1px dashed black;
+}
+
+.dropdown-button:hover {
+    background-color: rgb(198, 198, 198);
+}
+
+.dropdown-content {
+    position: absolute;
+    background-color: #f9f9f9;
+    width: 180px;
+    box-shadow: 0px 8px 16px 0px rgba(0,0,0,0.2);
+    z-index: 1;
+    border-radius: 5px;
+    margin-top: 2px;
+}
+
+.dropdown-content li {
+    color: black;
+    padding: 12px 16px;
+    text-decoration: none;
+    display: block;
+    cursor: pointer;
+}
+
+.dropdown-content li:hover {
+    background-color: #ddd;
+}
+.icon-search-fee{
+    margin-bottom: -2.7px;
+    margin-left: 5px;
+}
+.table-container {
+    width: 100%; /* Thiết lập chiều rộng cho bảng */
+    overflow: auto; /* Cho phép cuộn khi cần */
+  }
+  
+  table {
+    width: 100%; /* Chiều rộng của bảng */
+    border-collapse: collapse; /* Loại bỏ khoảng cách giữa các border */
+    table-layout: fixed; /* Đảm bảo rằng các cột có chiều rộng cố định */
+  }
+  
+  thead th {
+    position: sticky;
+    top: 0; /* Giữ tiêu đề cố định khi cuộn */
+    background-color: #f9f9f9; /* Màu nền để tiêu đề nổi bật */
+  }
+  
+  tbody {
+    display: block;
+    max-height: 60vh; /* Chiều cao của tbody, có thể thay đổi tùy theo yêu cầu */
+    overflow-y: auto; /* Cho phép cuộn dọc trong tbody */
+    overflow-x: hidden; /* Ẩn cuộn ngang */
+  }
+  
+  thead {
+    display: table; /* Chiều rộng toàn phần của thead để khớp với tbody */
+    table-layout: fixed; /* Đảm bảo rằng layout được giữ nguyên */
+  }
+  
+.btn-table-fee{
+    display: flex;
+    flex-direction: column;
+    gap: 5px;
+    padding-left: 35px;
+    padding-right: 35px;
+}
 .th-fee{
+    width: calc((100vw - 560px) / 5.5);
+    text-align: center;
+    border: 1px solid #7f7f7f;
+    padding: 10px;
+    font-size: 20px;
+}
+.td-fee{
     width: calc((100vw - 560px) / 5.5);
     text-align: center;
     border: 1px solid #7f7f7f;

@@ -76,7 +76,7 @@ const PlusPeople = ({ onClickPlus }) => {
     <div className="plus-department" onClick={onClickPlus}>
       <div className="plus-department-child" onClick={handleInnerClick}>
         <form className="form-plus-department-2" onSubmit={submit}>
-          <h2>Thêm cư dân mới</h2>
+          <h2>Thêm cư dân</h2>
           <div className="title-input-plus-department">
             <label>Tên</label>
             <Input
