@@ -21,7 +21,7 @@ const DepartmentSchema = new mongoose.Schema({
   floor: Number,
   roomNumber: Number,
   acreage: Number,
-  purchaser: mongoose.Schema.Types.ObjectId,
+  purchaser: { type: mongoose.Schema.Types.ObjectId, ref: "peoples" },
   status: String,
 });
 
