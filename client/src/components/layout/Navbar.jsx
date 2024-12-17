@@ -73,7 +73,8 @@ const Navbar = () => {
         <Button 
           onClick={logOut} 
           className="btn-nav logout" 
-          type="primary">
+          type="primary"
+          >
           Đăng xuất
         </Button>
       ) : (

@@ -1,4 +1,4 @@
-.department-all{
+/*.department-all{
     background: url("pic/home.jpg");
     padding: 20px;
     height: 100vh;
@@ -29,6 +29,7 @@
     gap: 20px;
     background: transparent;
     backdrop-filter: blur(20px);
+    // background-color: #FFF; 
 }
 .department h2{
     text-align: center;
@@ -46,11 +47,12 @@
     width: 32%;
     height: 100%;
     background-color: #B0E0E6;
-    padding: 10px;
+    padding: 7px;
     font-size: 20px;
     font-weight: bold;
     color: black;
     margin-right: 6%;
+    padding-top: 1%;
 }
 .depart-statistical p{
     text-align: center;
@@ -115,40 +117,41 @@
     margin-left: 5px;
 }
 .table-container {
-    width: 100%; /* Thiết lập chiều rộng cho bảng */
-    overflow: auto; /* Cho phép cuộn khi cần */
+    width: 100%; // Thiết lập chiều rộng cho bảng 
+    overflow: auto; // Cho phép cuộn khi cần 
   }
   
   table {
-    width: 100%; /* Chiều rộng của bảng */
-    border-collapse: collapse; /* Loại bỏ khoảng cách giữa các border */
-    table-layout: fixed; /* Đảm bảo rằng các cột có chiều rộng cố định */
+    width: 100%; // Chiều rộng của bảng 
+    border-collapse: collapse; // Loại bỏ khoảng cách giữa các border 
+    table-layout: fixed; // Đảm bảo rằng các cột có chiều rộng cố định 
   }
   
   thead th {
     position: sticky;
-    top: 0; /* Giữ tiêu đề cố định khi cuộn */
-    background-color: #f9f9f9; /* Màu nền để tiêu đề nổi bật */
+    top: 0; // Giữ tiêu đề cố định khi cuộn 
+    background-color: #f9f9f9; // Màu nền để tiêu đề nổi bật 
   }
   
   tbody {
     display: block;
-    max-height: 60vh; /* Chiều cao của tbody, có thể thay đổi tùy theo yêu cầu */
-    overflow-y: auto; /* Cho phép cuộn dọc trong tbody */
-    overflow-x: hidden; /* Ẩn cuộn ngang */
+    max-height: 60vh; // Chiều cao của tbody, có thể thay đổi tùy theo yêu cầu 
+    overflow-y: auto; // Cho phép cuộn dọc trong tbody 
+    overflow-x: hidden; // Ẩn cuộn ngang 
   }
   
   thead {
-    display: table; /* Chiều rộng toàn phần của thead để khớp với tbody */
-    table-layout: fixed; /* Đảm bảo rằng layout được giữ nguyên */
+    display: table; // Chiều rộng toàn phần của thead để khớp với tbody 
+    table-layout: fixed; // Đảm bảo rằng layout được giữ nguyên 
   }
   
   th, td {
-    width: calc((100vw - 560px) / 5.5); /* Đảm bảo rằng mỗi cột có cùng chiều rộng */
-    text-align: center; /* Căn chỉnh văn bản */
-    border: 1px solid #7f7f7f; /* Thêm border cho th và td */
+    width: calc((100vw - 560px) / 5); // Đảm bảo rằng mỗi cột có cùng chiều rộng 
+    text-align: center; // Căn chỉnh văn bản 
+    border: 1px solid #7f7f7f; // Thêm border cho th và td 
     padding: 10px;
     font-size: 20px;
+    background-color: #FFF;
   }
   .btn-table-department{
     display: flex;
@@ -156,4 +159,260 @@
     gap: 5px;
     padding-left: 35px;
     padding-right: 35px;
+}
+    */
+/* Phong cách cơ bản */
+.department-all {
+    background: url("pic/home.jpg");
+    padding: 20px;
+    height: 100vh;
+    font-family: Montserrat;
+    font-optical-sizing: auto;
+    font-weight: 500;
+    font-style: normal;
+    background-size: cover;
+    background-position: center;
+}
+
+.btn-plus-department {
+    height: 40px;
+    font-size: 17px;
+    font-weight: bold;
+    width: 200px;
+}
+
+.icon-btn-plus-department {
+    margin-bottom: -4px;
+    margin-right: 5px;
+}
+
+.department {
+    margin-top: 4%;
+    border: 2px solid rgb(119, 119, 119);
+    border-radius: 10px;
+    box-shadow: 0px 0px 5px 2px rgba(0, 0, 0, 0.512);
+    padding: 10px;
+    height: auto;
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+    background: rgba(255, 255, 255, 0.1); /* Làm mờ */
+    backdrop-filter: blur(20px);
+}
+
+.department h2 {
+    text-align: center;
+    font-size: 50px;
+    color: whitesmoke;
+}
+
+.depart-2 {
+    display: flex;
+    flex-wrap: wrap; /* Cho phép xuống hàng nếu không đủ không gian */
+    justify-content: center;
+    gap: 10px;
+    margin-left: 0;
+    width: 100%;
+}
+
+.depart-statistical {
+    border-radius: 20px;
+    width: 100%;
+    max-width: 400px; /* Giới hạn chiều rộng */
+    height: auto;
+    background-color: #b0e0e6;
+    padding: 15px;
+    font-size: 18px;
+    font-weight: bold;
+    color: black;
+    text-align: center;
+}
+
+.people {
+    margin: 0 auto;
+    width: 100%;
+}
+.people-2 {
+    display: flex;
+    flex-wrap: wrap; /* Cho phép xuống hàng nếu không đủ không gian */
+    justify-content: center;
+    gap: 10px;
+    margin-left: 0;
+    width: 100%;
+}
+
+.people-statistical {
+    border-radius: 20px;
+    width: 100%;
+    max-width: 400px; /* Giới hạn chiều rộng */
+    height: auto;
+    background-color: #b0e0e6;
+    padding: 15px;
+    font-size: 18px;
+    font-weight: bold;
+    color: black;
+    text-align: center;
+}
+
+.search-department{
+    display: flex;
+    gap: 30px;
+    justify-content: space-around;
+    width: 90%;
+}
+
+.dropdown-container {
+    position: relative;
+    display: inline-block;
+}
+
+.dropdown-button {
+    background-color: rgb(239, 239, 239);
+    color: black;
+    padding: 10px;
+    border: 1px dashed black;
+    cursor: pointer;
+    font-size: 16px;
+    border-radius: 5px;
+    text-align: center;
+    height: 40px; /* Cùng chiều cao với thanh tìm kiếm */
+    min-width: 150px; /* Đảm bảo nút không quá nhỏ */
+}
+
+.dropdown-content {
+    position: absolute;
+    background-color: #f9f9f9;
+    width: 100%;
+    max-width: 180px;
+    box-shadow: 0px 8px 16px 0px rgba(0, 0, 0, 0.2);
+    z-index: 1;
+    border-radius: 5px;
+    margin-top: 2px;
+}
+
+.table-container {
+    width: 100%; /* Chiều rộng 100% */
+    overflow-x: auto; /* Cuộn ngang/dọc khi cần */
+}
+
+table {
+    width: 100%; /* Chiều rộng bảng đầy đủ */
+    border-collapse: collapse;
+    table-layout: fixed;
+}
+
+thead {
+    display: table;
+    width: 100%;
+}
+
+thead th {
+    width: 100%;
+    text-align: center;
+    font-weight: bold;
+    background-color: #f9f9f9;
+    border: 1px solid #141414;
+    padding: 10px;
+}
+
+tbody {
+    display: table;
+    max-height: 60vh;
+    overflow-y: auto;
+    width: 100%;
+    border: 1px solid #141414;
+}
+
+th, td {
+    text-align: center;
+    border: 1px solid #131212;
+    padding: 10px;
+    font-size: 16px;
+    word-wrap: break-word;
+}
+tbody tr td[colspan] {
+    width: 100%;
+    text-align: center;
+    padding: 10px;
+    background-color: transparent;
+    color: #333;
+    font-size: 18px;
+    border: 1px solid #7f7f7f;
+}
+
+
+/* Responsive cho thiết bị nhỏ */
+@media screen and (max-width: 1024px) {
+    .department {
+        padding: 5px;
+    }
+
+    .department h2 {
+        font-size: 25px;
+    }
+
+    .btn-plus-department {
+        font-size: 15px;
+        width: 160px;
+    }
+
+    th, td {
+        font-size: 14px;
+        padding: 8px;
+    }
+
+    .depart-2 {
+        gap: 5px;
+    }
+
+    .depart-statistical {
+        font-size: 16px;
+        padding: 10px;
+    }
+}
+
+@media screen and (max-width: 768px) {
+    .depart-statistical {
+        max-width: 100%;
+        font-size: 14px;
+    }
+
+    .search-department {
+        flex-direction: column;
+        gap: 10px;
+    }
+
+    .table-container {
+        font-size: 12px;
+    }
+
+    .dropdown-button {
+        font-size: 14px;
+        padding: 8px;
+    }
+}
+
+@media screen and (max-width: 480px) {
+    .department h2 {
+        font-size: 20px;
+    }
+
+    .btn-plus-department {
+        font-size: 14px;
+        width: 140px;
+        height: 35px;
+    }
+
+    th, td {
+        font-size: 12px;
+        padding: 5px;
+    }
+
+    .depart-statistical {
+        font-size: 12px;
+    }
+
+    .dropdown-button {
+        font-size: 12px;
+    }
 }

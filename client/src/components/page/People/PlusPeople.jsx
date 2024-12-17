@@ -160,7 +160,7 @@
 // export default PlusPeople;
 
 import React, { useState, useEffect } from "react";
-import { Input, Button, message, Select } from "antd";
+import { Input, Button, message, Select, Radio } from "antd";
 import axios from "axios";
 const { Option } = Select;
 
@@ -176,6 +176,7 @@ const PlusPeople = ({ onClickPlus }) => {
   });
 
   const [availableRooms, setAvailableRooms] = useState([]);
+  const [inputRoomType, setInputRoomType] = useState("select"); // Kiểm soát cách nhập số phòng (chọn hoặc nhập)
 
   // Hàm kiểm tra số CCCD
   const validateCCCD = (cccd) => {
@@ -217,18 +218,23 @@ const PlusPeople = ({ onClickPlus }) => {
     e.preventDefault();
 
     // Kiểm tra dữ liệu nhập
-    if (!validatePhoneNumber(value.phoneNumber)) {
-      message.error("Số điện thoại không hợp lệ. Vui lòng nhập đúng 10 chữ số.");
-      return;
-    }    
-
     if (!validateCCCD(value.cccd)) {
       message.error("Số CCCD không hợp lệ. Vui lòng nhập đúng 12 chữ số.");
       return;
     }
 
+    if (!validatePhoneNumber(value.phoneNumber)) {
+      message.error("Số điện thoại không hợp lệ. Vui lòng nhập đúng 10 chữ số.");
+      return;
+    }
+
     if (value.email && !validateEmail(value.email)) {
       message.error("Email không hợp lệ. Vui lòng nhập đúng định dạng email.");
+      return;
+    }
+
+    if (!value.roomNumber || isNaN(value.roomNumber)) {
+      message.error("Số phòng phải là một số hợp lệ.");
       return;
     }
 
@@ -269,8 +275,12 @@ const PlusPeople = ({ onClickPlus }) => {
     setValue({ ...value, gioitinh: status });
   };
 
-  const onChangeRoomNumber = (status) => {
-    setValue({ ...value, roomNumber: status });
+  const handleRoomInputChange = (e) => {
+    setValue({ ...value, roomNumber: e.target.value });
+  };
+
+  const handleRoomSelectChange = (roomNumber) => {
+    setValue({ ...value, roomNumber });
   };
 
   return (
@@ -287,17 +297,37 @@ const PlusPeople = ({ onClickPlus }) => {
           </div>
           <div className="title-input-plus-department">
             <label>Số phòng</label>
-            <Select
-              value={value.roomNumber}
-              onChange={onChangeRoomNumber}
-              style={{ width: 110, marginLeft: 20 }}
+            {/* Radio button để chọn cách nhập */}
+            <Radio.Group
+              onChange={(e) => setInputRoomType(e.target.value)}
+              value={inputRoomType}
+              style={{ marginBottom: "10px" }}
             >
-              {availableRooms.map((room) => (
-                <Option key={room} value={room}>
-                  Phòng {room}
-                </Option>
-              ))}
-            </Select>
+              <Radio value="select">Chọn số phòng</Radio>
+              <Radio value="input">Nhập số phòng</Radio>
+            </Radio.Group>
+
+            {inputRoomType === "select" ? (
+              <Select
+                value={value.roomNumber}
+                onChange={handleRoomSelectChange}
+                style={{ width: 120 }}
+                placeholder="Chọn số phòng"
+              >
+                {availableRooms.map((room) => (
+                  <Option key={room} value={room}>
+                    Phòng {room}
+                  </Option>
+                ))}
+              </Select>
+            ) : (
+              <Input
+                type="number"
+                value={value.roomNumber}
+                onChange={handleRoomInputChange}
+                placeholder="Nhập số phòng"
+              />
+            )}
           </div>
           <div className="title-input-plus-department">
             <label>Số điện thoại</label>

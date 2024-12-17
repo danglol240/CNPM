@@ -149,8 +149,10 @@ const People = () => {
       <div className="department">
         <h2>Dân cư</h2>
         <div className="people">
+          <div className="depart-2">
           <div className="depart-statistical">
             <p>Tổng dân cư sinh sống : {dataPeople.length}</p>
+          </div>
           </div>
         </div>
         <Button
@@ -195,26 +197,26 @@ const People = () => {
         <table className="table-container">
           <thead>
             <tr>
-              <th>STT</th>
-              <th>Tên</th>
-              <th>Số phòng</th>
-              <th>Giới tính</th>
-              <th>Số điện thoại</th>
-              <th>Ngày chuyển vào</th>
-              <th>Tùy chọn</th>
+              <th style={{width:"5%"}}>STT</th>
+              <th style={{width:"30%"}}>Tên</th>
+              <th style={{width:"10%"}}>Số phòng</th>
+              <th style={{width:"10%"}}>Giới tính</th>
+              <th style={{width:"20%"}}>Số điện thoại</th>
+              <th style={{width:"10%"}}>Ngày chuyển vào</th>
+              <th style={{width:"15%"}}>Tùy chọn</th>
             </tr>
           </thead>
           <tbody>
             {Array.isArray(searchData) && searchData.length > 0 ? (
               searchData.map((item, index) => (
                 <tr key={item._id}>
-                  <td>{index + 1}</td>
-                  <td>{item.namePeople}</td>
-                  <td>{item.departments.roomNumber}</td>
-                  <td>{item.gioitinh}</td>
-                  <td>{item.phoneNumber}</td>
-                  <td>{formatDate(item.moveInDate)}</td>
-                  <td className="btn-table-department">
+                  <td style={{width:"5%"}}>{index + 1}</td>
+                  <td style={{width:"30%"}}>{item.namePeople}</td>
+                  <td style={{width:"10%"}}>{item.departments.roomNumber}</td>
+                  <td style={{width:"10%"}}>{item.gioitinh}</td>
+                  <td style={{width:"20%"}}>{item.phoneNumber}</td>
+                  <td style={{width:"10%"}}>{formatDate(item.moveInDate)}</td>
+                  <td className="btn-table-department" style={{width:"15%"}}>
                     <Button type="primary" onClick={() => onClickEdit(item)}>
                       Chi tiết
                     </Button>

@@ -36,21 +36,15 @@ const Fee = () => {
 
   const toggleDropdown = () => setIsOpen(!isOpen);
 
-  const CheckFeeStatus = (unpaidRooms) => {
-    if (!unpaidRooms || unpaidRooms.length === 0) {
-      return (
-        <td className="th-fee" style={{ color: "green", fontWeight: "bold" }}>
-          Đã hoàn thành
-        </td>
-      );
-    } else {
-      return (
-        <td className="th-fee" style={{ color: "red", fontWeight: "bold" }}>
-          Chưa hoàn thành
-        </td>
-      );
+  const CheckFeeStatus = (unpaidRooms, returnAsJSX = true) => {
+    const text = unpaidRooms && unpaidRooms.length > 0 ? "Chưa hoàn thành" : "Đã hoàn thành";
+    const color = unpaidRooms && unpaidRooms.length > 0 ? "red" : "green";
+
+    if (returnAsJSX) {
+        return <span style={{ color, fontWeight: "bold" }}>{text}</span>;
     }
-  };
+    return { text, color }; // Trả về text và màu sắc nếu không phải JSX
+};
 
   const handleSelect = (option) => {
     setSelectedOption(option);
@@ -199,30 +193,31 @@ const Fee = () => {
         <table className="table-container">
           <thead>
             <tr>
-              <th className="th-fee">STT</th>
-              <th className="th-fee">Tên phí</th>
-              <th className="th-fee">Loại phí</th>
-              <th className="th-fee">Giá phí</th>
-              <th className="th-fee">Ngày bắt đầu</th>
-              <th className="th-fee">Ngày kết thúc</th>
-              <th className="th-fee">Tùy chọn</th>
-              <th className="th-fee">Trạng thái</th>
+              <th className="th-fee" style={{ width: "5%", }}  >STT</th>
+              <th className="th-fee" style={{ width: "20%" }}  >Tên phí</th>
+              <th className="th-fee" style={{ width: "10%" }}  >Loại phí</th>
+              <th className="th-fee" style={{ width: "15%" }}  >Giá phí</th>
+              <th className="th-fee" style={{ width: "10%" }}  >Ngày bắt đầu</th>
+              <th className="th-fee" style={{ width: "10%" }}  >Ngày kết thúc</th>
+              <th className="th-fee" style={{ width: "15%" }}  >Tùy chọn</th>
+              <th className="th-fee" style={{ width: "15%" }}  >Trạng thái</th>
             </tr>
           </thead>
+          <thead>
           <tbody>
             {Array.isArray(searchData) && searchData.length > 0 ? (
               searchData.map((item, index) => (
                 <tr key={item._id}>
-                  <td className="th-fee">{index + 1}</td>
-                  <td className="th-fee">{item.nameFee}</td>
-                  <td className="th-fee">{item.typeFee}</td>
-                  <td className="th-fee">
+                  <td className="th-fee" style={{ width: "5%" }} >{index + 1}</td>
+                  <td className="th-fee" style={{ width: "20%" }}>{item.nameFee}</td>
+                  <td className="th-fee" style={{ width: "10%" }}>{item.typeFee}</td>
+                  <td className="th-fee" style={{ width: "15%" }}>
                     {item.price ? item.price.toLocaleString("vi-VN") + "đ" : ""}
                   </td>
-                  <td className="th-fee">{formatDate(item.startDate)}</td>
-                  <td className="th-fee">{formatDate(item.endDate)}</td>
-                  <td className="btn-table-department th-fee">
-                    <Button type="primary" onClick={() => showFeeDetails(item)}>
+                  <td className="th-fee" style={{ width: "10%" }}>{formatDate(item.startDate)}</td>
+                  <td className="th-fee" style={{ width: "10%" }}>{formatDate(item.endDate)}</td>
+                  <td className="btn-table-department th-fee" style={{width: "15%"}}>
+                    <Button type="primary" onClick={() => showFeeDetails(item)} >
                       Chi tiết
                     </Button>
                     <Button
@@ -233,7 +228,7 @@ const Fee = () => {
                       Xóa
                     </Button>
                   </td>
-                  {CheckFeeStatus(item.unpaidRooms)}
+                  <td className="th-fee" style={{width: "15%"}}>{CheckFeeStatus(item.unpaidRooms)}</td>
                 </tr>
               ))
             ) : (
@@ -242,6 +237,7 @@ const Fee = () => {
               </tr>
             )}
           </tbody>
+          </thead>
         </table>
       </div>
     </div>

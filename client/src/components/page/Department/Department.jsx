@@ -197,15 +197,16 @@ const Department = () => {
         <table className="table-container">
           <thead>
             <tr>
-              <th>STT</th>
-              <th>Tầng</th>
-              <th>Số phòng</th>
-              <th>Diện tích</th>
-              <th>Chủ sở hữu</th>
-              <th>Trạng thái</th>
-              <th>Tùy chọn</th>
+              <th style={{width:"5%"}}>STT</th>
+              <th style={{width:"12.5%"}}>Tầng</th>
+              <th style={{width:"12.5%"}}>Số phòng</th>
+              <th style={{width:"10%"}}>Diện tích</th>
+              <th style={{width:"30%"}}>Chủ sở hữu</th>
+              <th style={{width:"15%"}}>Trạng thái</th>
+              <th style={{width:"15%"}}>Tùy chọn</th>
             </tr>
           </thead>
+          {/* <thead> */}
           <tbody>
             {Array.isArray(searchData) && searchData.length === 0 ? (
               <tr>
@@ -214,13 +215,13 @@ const Department = () => {
             ) : (
               searchData.map((item, index) => (
                 <tr key={item._id}>
-                  <td>{index + 1}</td>
-                  <td>{item.floor}</td>
-                  <td>{item.roomNumber}</td>
-                  <td>{item.acreage}</td>
-                  <td>{item.purchaser}</td>
-                  <td>{item.status}</td>
-                  <td className="btn-table-department">
+                  <td style={{width:"5%"}}>{index + 1}</td>
+                  <td style={{width:"12.5%"}}>{item.floor}</td>
+                  <td style={{width:"12.5%"}}>{item.roomNumber}</td>
+                  <td style={{width:"10%"}}>{item.acreage}</td>
+                  <td style={{width:"30%"}}>{item.purchaser}</td>
+                  <td style={{width:"15%"}}>{item.status}</td>
+                  <td className="btn-table-department" style={{width:"15%"}}>
                     <Button type="primary" onClick={() => onClickEdit(item)}>
                       Chỉnh sửa
                     </Button>
@@ -236,6 +237,7 @@ const Department = () => {
               ))
             )}
           </tbody>
+          {/* </thead> */}
         </table>
       </div>
     </div>
