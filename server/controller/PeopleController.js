@@ -130,27 +130,51 @@ const PeopleController = {
       let oldRoom = null;
       let newRoom = null;
   
-      // Nếu người đã có phòng và phòng cũ khác phòng mới
+      // Nếu người đã có phòng và phòng cũ khác phòng mới và không còn ai ở phòng cũ
       if (currentRoomNumber && currentRoomNumber !== roomNumber) {
-        // Xóa thông tin chủ sở hữu khỏi phòng cũ
-        oldRoom = await DepartmentModel.findOneAndUpdate(
-          { roomNumber: currentRoomNumber, purchaser: id },
-          { purchaser: null, status: "Trống" }
-        );
+        const occupants = await PeopleModel.countDocuments({ roomNumber: currentRoomNumber });
+        if (occupants === 0) {
+          // Xóa thông tin chủ sở hữu khỏi phòng cũ
+          oldRoom = await DepartmentModel.findOneAndUpdate(
+        { roomNumber: currentRoomNumber, purchaser: id },
+        { purchaser: null, status: "Trống" }
+          );
+        }
       }
+      // if (currentRoomNumber && currentRoomNumber !== roomNumber) {
+      //   // Xóa thông tin chủ sở hữu khỏi phòng cũ
+      //   oldRoom = await DepartmentModel.findOneAndUpdate(
+      //     { roomNumber: currentRoomNumber, purchaser: id },
+      //     { purchaser: null, status: "Trống" }
+      //   );
+      // }
   
-      // Nếu có phòng mới cần cập nhật
       if (roomNumber) {
-        newRoom = await DepartmentModel.findOneAndUpdate(
-          { roomNumber: roomNumber }, // Tìm phòng mới theo roomNumber
-          { purchaser: id, status: "Đã thuê" }, // Cập nhật chủ sở hữu
-          { new: true } // Trả về dữ liệu sau khi cập nhật
-        );
-  
-        if (!newRoom) {
+        const newRoom = await DepartmentModel.findOne({ roomNumber });
+        if (newRoom) {
+          if (!newRoom.purchaser) {
+        newRoom.purchaser = id;
+        newRoom.status = "Đã thuê";
+        await newRoom.save();
+          }
+        } else {
           throw new Error("Phòng mới không tồn tại hoặc đã được thuê.");
         }
       }
+      // if (roomNumber) {
+
+        
+
+      //   newRoom = await DepartmentModel.findOneAndUpdate(
+      //     { roomNumber: roomNumber }, // Tìm phòng mới theo roomNumber
+      //     { purchaser: id, status: "Đã thuê" }, // Cập nhật chủ sở hữu
+      //     { new: true } // Trả về dữ liệu sau khi cập nhật
+      //   );
+  
+      //   if (!newRoom) {
+      //     throw new Error("Phòng mới không tồn tại hoặc đã được thuê.");
+      //   }
+      // }
   
       res.status(200).send({
         message: "Cập nhật thông tin người và phòng thành công.",
