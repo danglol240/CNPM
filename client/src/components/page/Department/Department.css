@@ -334,7 +334,7 @@ tbody tr td[colspan] {
     width: 100%;
     text-align: center;
     padding: 10px;
-    background-color: transparent;
+    background-color: whitesmoke;
     color: #333;
     font-size: 18px;
     border: 1px solid #7f7f7f;
