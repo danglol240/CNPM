@@ -9,16 +9,16 @@ const PeopleController = {
       const data = await PeopleModel.aggregate([
         {
           $lookup: {
-            from: "departments",
-            localField: "_id",
-            foreignField: "purchaser",
+            from: "departments", // Bảng phòng
+            localField: "roomNumber", // Liên kết bằng roomNumber
+            foreignField: "roomNumber",
             as: "departments",
           },
         },
         {
           $unwind: {
             path: "$departments",
-            preserveNullAndEmptyArrays: true,
+            preserveNullAndEmptyArrays: true, // Hiển thị ngay cả khi phòng không liên kết
           },
         },
         {
@@ -30,14 +30,14 @@ const PeopleController = {
             moveInDate: 1,
             gioitinh: 1,
             email: 1,
-            "departments.roomNumber": 1,
+            "departments.roomNumber": 1, // Hiển thị roomNumber
           },
         },
       ]);
-
+  
       res.status(200).send({ data });
     } catch (error) {
-      console.error("Error occurred while fetching people with rooms:", error);
+      console.error("Lỗi khi lấy dữ liệu cư dân:", error);
       res.status(500).send({ message: "Internal server error" });
     }
   },
@@ -53,47 +53,40 @@ const PeopleController = {
       roomNumber,
     } = req.body;
     const moveInDate = new Date();
-
+  
     try {
-      // Tạo mới một người
-      const newPeople = await PeopleModel.create([
-        {
-          namePeople,
-          phoneNumber,
-          cccd,
-          birthDate,
-          gioitinh,
-          email,
-          moveInDate,
-        },
-      ]);
-
-      // Cập nhật phòng với thông tin chủ sở hữu mới
-      const updatedRoom = await DepartmentModel.findOneAndUpdate(
-        { roomNumber: roomNumber },
-        { purchaser: newPeople[0]._id, status: "Đã thuê" }
-      );
-
-      if (!updatedRoom) {
-        throw new Error("Room not found or already rented");
+      // Tạo mới một người và lưu luôn roomNumber
+      const newPeople = await PeopleModel.create({
+        namePeople,
+        phoneNumber,
+        cccd,
+        birthDate,
+        gioitinh,
+        email,
+        moveInDate,
+        roomNumber, // Thêm roomNumber để liên kết với phòng
+      });
+  
+      // Nếu phòng chưa được thuê, cập nhật purchaser
+      const room = await DepartmentModel.findOne({ roomNumber: roomNumber });
+      if (!room) {
+        throw new Error("Phòng không tồn tại.");
       }
-
-      // Commit transaction
-
+  
+      if (!room.purchaser) {
+        room.purchaser = newPeople._id;
+        room.status = "Đã thuê";
+        await room.save();
+      }
+  
       res.status(201).send({
-        message: "Person created and room updated successfully",
-        people: newPeople[0],
-        room: updatedRoom,
+        message: "Thêm cư dân thành công.",
+        people: newPeople,
+        room: room,
       });
     } catch (error) {
-      // Nếu có lỗi, rollback transaction
-      await session.abortTransaction();
-      session.endSession();
-      console.error(
-        "Error occurred while creating person and updating room:",
-        error
-      );
-      res.status(500).send({ message: "Internal server error" });
+      console.error("Lỗi khi thêm cư dân và cập nhật phòng:", error);
+      res.status(500).send({ message: "Đã xảy ra lỗi. Vui lòng thử lại sau." });
     }
   },
 
@@ -106,60 +99,68 @@ const PeopleController = {
       gioitinh,
       email,
       roomNumber,
-      moveInDate,
     } = req.body;
-
-    const { id } = req.params;
-
+  
+    const { id } = req.params; // ID của người cần cập nhật
+  
     try {
-      // Cập nhật thông tin người
-      const updatedPeople = await PeopleModel.findByIdAndUpdate(id, {
-        namePeople,
-        phoneNumber,
-        cccd,
-        birthDate,
-        gioitinh,
-        email,
-        moveInDate,
-      });
-
-      if (!updatedPeople) {
-        throw new Error("Person not found");
+      // Lấy thông tin người hiện tại để kiểm tra phòng cũ
+      const existingPerson = await PeopleModel.findById(id);
+      if (!existingPerson) {
+        throw new Error("Người cần cập nhật không tồn tại.");
       }
-
+  
+      const currentRoomNumber = existingPerson.roomNumber; // Lấy phòng hiện tại
+  
+      // Cập nhật thông tin người
+      const updatedPeople = await PeopleModel.findByIdAndUpdate(
+        id,
+        {
+          namePeople,
+          phoneNumber,
+          cccd,
+          birthDate,
+          gioitinh,
+          email,
+          roomNumber, // Cập nhật roomNumber
+        },
+        { new: true } // Trả về dữ liệu sau khi cập nhật
+      );
+  
       let oldRoom = null;
-      let updatedRoom = null;
-
-      if (roomNumber) {
-        // Xóa thông tin chủ sở hữu ở phòng cũ
+      let newRoom = null;
+  
+      // Nếu người đã có phòng và phòng cũ khác phòng mới
+      if (currentRoomNumber && currentRoomNumber !== roomNumber) {
+        // Xóa thông tin chủ sở hữu khỏi phòng cũ
         oldRoom = await DepartmentModel.findOneAndUpdate(
-          { purchaser: id },
+          { roomNumber: currentRoomNumber, purchaser: id },
           { purchaser: null, status: "Trống" }
         );
-
-        // Cập nhật phòng với thông tin chủ sở hữu mới
-        updatedRoom = await DepartmentModel.findOneAndUpdate(
-          { roomNumber: roomNumber },
-          { purchaser: id, status: "Đã thuê" }
+      }
+  
+      // Nếu có phòng mới cần cập nhật
+      if (roomNumber) {
+        newRoom = await DepartmentModel.findOneAndUpdate(
+          { roomNumber: roomNumber }, // Tìm phòng mới theo roomNumber
+          { purchaser: id, status: "Đã thuê" }, // Cập nhật chủ sở hữu
+          { new: true } // Trả về dữ liệu sau khi cập nhật
         );
-
-        if (!updatedRoom) {
-          throw new Error("Room not found or already rented");
+  
+        if (!newRoom) {
+          throw new Error("Phòng mới không tồn tại hoặc đã được thuê.");
         }
       }
-
+  
       res.status(200).send({
-        message: "Person updated and room updated successfully",
+        message: "Cập nhật thông tin người và phòng thành công.",
         people: updatedPeople,
         oldRoom: oldRoom,
-        newRoom: updatedRoom,
+        newRoom: newRoom,
       });
     } catch (error) {
-      console.error(
-        "Error occurred while updating person and updating room:",
-        error
-      );
-      res.status(500).send({ message: "Internal server error" });
+      console.error("Lỗi khi cập nhật thông tin người và phòng:", error);
+      res.status(500).send({ message: "Đã xảy ra lỗi. Vui lòng thử lại sau." });
     }
   },
 
@@ -193,7 +194,9 @@ const PeopleController = {
 
   getRoomAddPeople: async (req, res) => {
     try {
-      const roomAddPeople = await DepartmentModel.find({ status: "Trống" });
+      const roomAddPeople = await DepartmentModel.find({
+        status: { $in: ["Trống", "Đã thuê"] },
+      });
       const roomNumbers = roomAddPeople.map((room) => room.roomNumber);
       res.status(200).send({ message: "successfully", dataRoom: roomNumbers });
     } catch (error) {
