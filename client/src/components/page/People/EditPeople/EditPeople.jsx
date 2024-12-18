@@ -190,39 +190,6 @@ const EditPeople = ({ onClickCloseEdit, editData }) => {
             </div>
           </div>
         </form>
-        <h3>Các khoản phí người dùng</h3>
-        <table className="table-container table-edit-people">
-          <thead>
-            <tr>
-              <th>STT</th>
-              <th>Tên khoản phí</th>
-              <th>Số tiền</th>
-              <th>Ngày hết hạn</th>
-              <th>Trạng thái</th>
-            </tr>
-          </thead>
-          <tbody>
-            {Array.isArray(dataFee) && dataFee.length > 0 ? (
-              dataFee.map((item, index) => (
-                <tr key={item._id}>
-                  <td>{index + 1}</td>
-                  <td>{item.nameFee}</td>
-                  <td>
-                    {checkPrice(item)
-                      ? checkPrice(item).toLocaleString("vi-VN") + "đ"
-                      : ""}
-                  </td>
-                  <td>{formatDateString(item.endDate)}</td>
-                  <td style={getStatusStyle(item.status)}>{item.status}</td>
-                </tr>
-              ))
-            ) : (
-              <tr>
-                <td colSpan="7">Không có khoản phí nào cho người này</td>
-              </tr>
-            )}
-          </tbody>
-        </table>
       </div>
     </div>
   );
