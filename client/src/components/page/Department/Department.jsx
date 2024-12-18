@@ -222,53 +222,53 @@ const Department = () => {
         </div>
         <table className="table-container">
         <thead>
-  <tr>
-    <th style={{ width: "5%" }}>STT</th>
-    <th style={{ width: "12.5%" }}>Tầng</th>
-    <th style={{ width: "12.5%" }}>Số phòng</th>
-    <th style={{ width: "10%" }}>Diện tích</th>
-    <th style={{ width: "15%" }}>Số người</th> {/* Cột mới */}
-    <th style={{ width: "30%" }}>Chủ sở hữu</th>
-    <th style={{ width: "15%" }}>Trạng thái</th>
-    <th style={{ width: "15%" }}>Tùy chọn</th>
-  </tr>
-</thead>
-<tbody>
-  {Array.isArray(searchData) && searchData.length === 0 ? (
-    <tr>
-      <td colSpan="8">Không tìm thấy kết quả phù hợp</td> {/* Thay đổi colspan thành 8 */}
-    </tr>
-  ) : (
-    searchData.map((item, index) => {
-      const person = dataPeople.find((p) => p._id === item.purchaser);
-      const purchaserName = person ? person.namePeople : "Không xác định";
-      const peopleCount = countPeopleInRoom(item.roomNumber); // Đếm số người trong phòng
-      return (
-        <tr key={item._id}>
-          <td style={{ width: "5%" }}>{index + 1}</td>
-          <td style={{ width: "12.5%" }}>{item.floor}</td>
-          <td style={{ width: "12.5%" }}>{item.roomNumber}</td>
-          <td style={{ width: "10%" }}>{item.acreage}</td>
-          <td style={{ width: "15%" }}>{peopleCount}</td> {/* Cột số lượng người */}
-          <td style={{ width: "30%" }}>{purchaserName}</td>
-          <td style={{ width: "15%" }}>{item.status}</td>
-          <td className="btn-table-department" style={{ width: "15%" }}>
-            <Button type="primary" onClick={() => onClickEdit(item)}>
-              Chỉnh sửa
-            </Button>
-            <Button
-              type="primary"
-              style={{ backgroundColor: "red" }}
-              onClick={() => showDeleteConfirm(item)}
-            >
-              Xóa
-            </Button>
-          </td>
-        </tr>
-      );
-    })
-  )}
-</tbody>
+          <tr>
+            <th style={{ width: "5%" }}>STT</th>
+            <th style={{ width: "10%" }}>Tầng</th>
+            <th style={{ width: "10%" }}>Số phòng</th>
+            <th style={{ width: "10%" }}>Diện tích</th>
+            <th style={{ width: "10%" }}>Số người đang sinh sống</th> {/* Cột mới */}
+            <th style={{ width: "25%" }}>Chủ sở hữu</th>
+            <th style={{ width: "15%" }}>Trạng thái</th>
+            <th style={{ width: "15%" }}>Tùy chọn</th>
+          </tr>
+        </thead>
+        <tbody>
+          {Array.isArray(searchData) && searchData.length === 0 ? (
+            <tr>
+              <td colSpan="8">Không tìm thấy kết quả phù hợp</td> {/* Thay đổi colspan thành 8 */}
+            </tr>
+          ) : (
+            searchData.map((item, index) => {
+              const person = dataPeople.find((p) => p._id === item.purchaser);
+              const purchaserName = person ? person.namePeople : "Không xác định";
+              const peopleCount = countPeopleInRoom(item.roomNumber); // Đếm số người trong phòng
+              return (
+                <tr key={item._id}>
+                  <td style={{ width: "5%" }}>{index + 1}</td>
+                  <td style={{ width: "10%" }}>{item.floor}</td>
+                  <td style={{ width: "10%" }}>{item.roomNumber}</td>
+                  <td style={{ width: "10%" }}>{item.acreage}</td>
+                  <td style={{ width: "10%" }}>{peopleCount}</td> {/* Cột số lượng người */}
+                  <td style={{ width: "25%" }}>{purchaserName}</td>
+                  <td style={{ width: "15%" }}>{item.status}</td>
+                  <td className="btn-table-department" style={{ width: "15%" }}>
+                    <Button type="primary" onClick={() => onClickEdit(item)}>
+                      Chỉnh sửa
+                    </Button>
+                    <Button
+                      type="primary"
+                      style={{ backgroundColor: "red" }}
+                      onClick={() => showDeleteConfirm(item)}
+                    >
+                      Xóa
+                    </Button>
+                  </td>
+                </tr>
+              );
+            })
+          )}
+        </tbody>
         </table>
       </div>
     </div>
