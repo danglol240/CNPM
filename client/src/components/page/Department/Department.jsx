@@ -15,6 +15,7 @@ const Department = () => {
   const [openPlus, setOpenPlus] = useState(false);
   const [openEdit, setOpenEdit] = useState(false);
   const [editData, setEditData] = useState([]);
+  const [dataPeople, setDataPeople] = useState([]);
 
   useEffect(() => {
     const fetchData = async () => {
@@ -25,6 +26,21 @@ const Department = () => {
       } catch (error) {
         console.error("Error fetching data: ", error);
       }
+
+      try {
+        const response = await axios.get("http://localhost:8080/people");
+        setDataPeople(response.data.data);
+        setRetryCount(0); // Reset retry count on successful fetch
+      } catch (err) {
+        console.log("Lỗi: ", err);
+        if (retryCount < 3) {
+          // Giới hạn số lần thử lại
+          setTimeout(() => {
+            setRetryCount(retryCount + 1);
+          }, 3000); // Thử lại sau 3 giây
+        }
+      }
+
     };
     fetchData();
   }, []);
@@ -48,28 +64,36 @@ const Department = () => {
   };
 
   const filterData = (value) => {
-    if (!value) return dataDepartment;
-    switch (selectedOption) {
-      case "Tầng":
-        return dataDepartment.filter((item) => item.floor == value);
-      case "Số phòng":
-        return dataDepartment.filter((item) => item.roomNumber == value);
-      case "Diện tích":
-        return dataDepartment.filter((item) => item.acreage == value);
-      case "Chủ sở hữu":
-        return dataDepartment.filter(
-          (item) =>
-            item.purchaser &&
-            item.purchaser.toLowerCase().includes(value.toLowerCase())
-        );
-      case "Trạng thái":
-        return dataDepartment.filter((item) =>
-          item.status.toLowerCase().includes(value.toLowerCase())
-        );
-      default:
-        return dataDepartment;
-    }
-  };
+  if (!value) return dataDepartment;
+  switch (selectedOption) {
+    case "Tầng":
+      return dataDepartment.filter((item) => item.floor == value);
+    case "Số phòng":
+      return dataDepartment.filter((item) => item.roomNumber == value);
+    case "Diện tích":
+      return dataDepartment.filter((item) => item.acreage == value);
+    case "Chủ sở hữu":
+      return dataDepartment
+        .map((item) => {
+          const person = dataPeople.find((p) => p._id === item.purchaser);
+          return {
+            ...item,
+            purchaser: person ? person.namePeople : "", // Thay đổi purchaser thành tên
+          };
+        })
+        .filter((item) =>
+          item.purchaser.toLowerCase().includes(value.toLowerCase())
+        ); // Lọc theo tên
+    case "Trạng thái":
+      return dataDepartment.filter((item) =>
+        item.status.toLowerCase().includes(value.toLowerCase())
+      );
+    default:
+      return dataDepartment;
+  }
+};
+  
+ 
 
   const onChange = (e) => {
     setValuesearchData(e.target.value);
@@ -207,35 +231,39 @@ const Department = () => {
             </tr>
           </thead>
           <tbody>
-            {Array.isArray(searchData) && searchData.length === 0 ? (
-              <tr>
-                <td colSpan="7">Không tìm thấy kết quả phù hợp</td>
-              </tr>
-            ) : (
-              searchData.map((item, index) => (
-                <tr key={item._id}>
-                  <td>{index + 1}</td>
-                  <td>{item.floor}</td>
-                  <td>{item.roomNumber}</td>
-                  <td>{item.acreage}</td>
-                  <td>{item.purchaser}</td>
-                  <td>{item.status}</td>
-                  <td className="btn-table-department">
-                    <Button type="primary" onClick={() => onClickEdit(item)}>
-                      Chỉnh sửa
-                    </Button>
-                    <Button
-                      type="primary"
-                      style={{ backgroundColor: "red" }}
-                      onClick={() => showDeleteConfirm(item)}
-                    >
-                      Xóa
-                    </Button>
-                  </td>
-                </tr>
-              ))
-            )}
-          </tbody>
+  {Array.isArray(searchData) && searchData.length === 0 ? (
+    <tr>
+      <td colSpan="7">Không tìm thấy kết quả phù hợp</td>
+    </tr>
+  ) : (
+    searchData.map((item, index) => {
+      const person = dataPeople.find((p) => p._id === item.purchaser); // Tìm người theo ID
+      const purchaserName = person ? person.namePeople : "Không xác định"; // Lấy tên hoặc hiển thị giá trị mặc định
+      return (
+        <tr key={item._id}>
+          <td>{index + 1}</td>
+          <td>{item.floor}</td>
+          <td>{item.roomNumber}</td>
+          <td>{item.acreage}</td>
+          <td>{purchaserName}</td> {/* Hiển thị tên thay vì ObjectID */}
+          <td>{item.status}</td>
+          <td className="btn-table-department">
+            <Button type="primary" onClick={() => onClickEdit(item)}>
+              Chỉnh sửa
+            </Button>
+            <Button
+              type="primary"
+              style={{ backgroundColor: "red" }}
+              onClick={() => showDeleteConfirm(item)}
+            >
+              Xóa
+            </Button>
+          </td>
+        </tr>
+      );
+    })
+  )}
+</tbody>
         </table>
       </div>
     </div>
