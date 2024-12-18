@@ -155,35 +155,35 @@ const EditDepartment = ({ onClickCloseEdit, editData }) => {
               <Option value="Đã thuê">Đã thuê</Option>
             </Select>
           </div>
-          <h3>Các khoản phí người dùng</h3>
+          <h3>Các khoản phí căn hộ</h3>
           <table className="table-container table-edit-people">
             <thead>
               <tr>
-                <th>STT</th>
-                <th>Tên khoản phí</th>
-                <th>Số tiền</th>
-                <th>Ngày hết hạn</th>
-                <th>Trạng thái</th>
+                <th style={{width: "10%"}}>STT</th>
+                <th style={{width: "30%"}}>Tên khoản phí</th>
+                <th style={{width: "20%"}}>Số tiền</th>
+                <th style={{width: "20%"}}>Ngày hết hạn</th>
+                <th style={{width: "20%"}}>Trạng thái</th>
               </tr>
             </thead>
             <tbody>
               {Array.isArray(dataFee) && dataFee.length > 0 ? (
                 dataFee.map((item, index) => (
                   <tr key={item._id}>
-                    <td>{index + 1}</td>
-                    <td>{item.nameFee}</td>
-                    <td>
+                    <td  style={{width: "10%"}}>{index + 1}</td>
+                    <td  style={{width: "30%"}}>{item.nameFee}</td>
+                    <td  style={{width: "20%"}}>
                       {checkPrice(item)
                         ? checkPrice(item).toLocaleString("vi-VN") + "đ"
                         : ""}
                     </td>
-                    <td>{formatDateString(item.endDate)}</td>
-                    <td style={getStatusStyle(item.status)}>{item.status}</td>
+                    <td  style={{width: "20%"}}>{formatDateString(item.endDate)}</td>
+                    <td style={{...getStatusStyle(item.status), width:"20%"}} >{item.status}</td>
                   </tr>
                 ))
               ) : (
                 <tr>
-                  <td colSpan="7">Không có khoản phí nào cho người này</td>
+                  <td colSpan="7">Không có khoản phí nào cho căn hộ này</td>
                 </tr>
               )}
             </tbody>
