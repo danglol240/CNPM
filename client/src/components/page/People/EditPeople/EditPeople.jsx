@@ -190,7 +190,7 @@ const EditPeople = ({ onClickCloseEdit, editData }) => {
             </div>
           </div>
         </form>
-        <h3>Các khoản phí người dùng</h3>
+        {/* <h3>Các khoản phí người dùng</h3>
         <table className="table-container table-edit-people">
           <thead>
             <tr>
@@ -222,7 +222,7 @@ const EditPeople = ({ onClickCloseEdit, editData }) => {
               </tr>
             )}
           </tbody>
-        </table>
+        </table> */}
       </div>
     </div>
   );
