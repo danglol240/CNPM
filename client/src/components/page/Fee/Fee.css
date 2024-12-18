@@ -101,6 +101,12 @@
     overflow-x: auto; /* Cho phép cuộn ngang nếu cần */
 }
 
+.table-container th, td{
+    word-wrap: break-word;
+    white-space: normal;
+    font-size: 1vw;
+}
+
 table {
     width: 100%; /* Bảng luôn chiếm toàn bộ chiều rộng */
     border-collapse: collapse; /* Gộp các đường viền */
@@ -118,7 +124,7 @@ thead th {
     background-color: #f9f9f9;
     border: 1px solid #141414;
     padding: 10px;
-    font-size: 16px;
+    font-size: 1vw;
     white-space: nowrap; 
     word-wrap: break-word;
 }
@@ -131,7 +137,7 @@ tbody td {
     text-align: center; /* Căn giữa dữ liệu */
     border: 1px solid #141414;
     padding: 10px;
-    font-size: 16px;
+    font-size: 1vw;
     word-wrap: break-word; /* Tự động xuống dòng nếu nội dung dài */
     background-color: #fff; /* Nền trắng cho dữ liệu */
     white-space: normal;
@@ -141,11 +147,12 @@ tbody td .btn-table-department {
     display: flex;
     justify-content: center; /* Căn giữa các nút trong cột */
     gap: 10px; /* Khoảng cách giữa các nút */
+    font-size: 1vw;
 }
 
 thead tr td[colSpan] {
     text-align: center; /* Căn giữa thông báo không tìm thấy dữ liệu */
-    font-size: 18px;
+    font-size: 1vw;
     font-weight: bold;
     background-color: #f9f9f9;
     padding: 15px;
@@ -181,7 +188,7 @@ thead tr td[colSpan] {
     text-align: center;
     border: 1px solid #7f7f7f;
     padding: 10px;
-    font-size: 20px;
+    font-size: 1vw;
     word-wrap: break-word;
     background-color: #ffffff;
 }
