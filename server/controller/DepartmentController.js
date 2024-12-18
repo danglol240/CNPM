@@ -7,7 +7,7 @@ const DepartmentController = {
       const data = departments.map((department) => ({
         ...department.toObject(),
         purchaser: department.purchaser
-          ? department.purchaser.namePeople
+          ? department.purchaser._id
           : null,
       }));
       res.status(200).send({

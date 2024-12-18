@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState ,useEffect} from "react";
 import axios from "axios";
 import "./EditDepartment.css";
 import { Input, Button, Select, message } from "antd";
@@ -14,6 +14,10 @@ const EditDepartment = ({ onClickCloseEdit, editData }) => {
     status: editData.status,
   });
 
+
+  console.log(editData.purchaser);
+ 
+  
   const onChangeValue = (item) => (e) => {
     setValue({ ...value, [item]: e.target.value });
   };
@@ -51,6 +55,49 @@ const EditDepartment = ({ onClickCloseEdit, editData }) => {
   const handleInnerClick = (e) => {
     e.stopPropagation();
   };
+
+  const [dataFee, setDataFee] = useState([]);
+  useEffect(() => {
+    const getDataRoom = async () => {
+      try {
+        const { data } = await axios.get(
+          `http://localhost:8080/getPeopleFee/${editData.purchaser}`
+        );
+        setDataFee(data.data);
+      } catch (error) {
+        console.log("Error fetching room data:", error);
+      }
+    };
+    getDataRoom();
+  }, []);
+
+  const checkPrice = (item) => {
+    const roomNumberFee = item.roomNumber.find(
+      (e) => e.purchaser === editData.purchaser
+    );
+    if (
+      item.typeFee.trim() === "Phí phòng" &&
+      roomNumberFee &&
+      roomNumberFee.acreage
+    ) {
+      return item.price * roomNumberFee.acreage;
+    } else {
+      return item.price;
+    }
+  };
+
+  const getStatusStyle = (status) => {
+    return status === "Đã đóng"
+      ? { color: "green", fontWeight: "bold" }
+      : { color: "red", fontWeight: "bold" };
+  };
+  
+  const formatDateString = (dateString) => {
+    if (!dateString) return "";
+    const formattedDate = dateString.slice(0, 10);
+    return formattedDate;
+  };
+
 
   return (
     <div className="plus-department" onClick={onClickCloseEdit}>
@@ -92,6 +139,39 @@ const EditDepartment = ({ onClickCloseEdit, editData }) => {
               <Option value="Đã thuê">Đã thuê</Option>
             </Select>
           </div>
+          <h3>Các khoản phí người dùng</h3>
+          <table className="table-container table-edit-people">
+            <thead>
+              <tr>
+                <th>STT</th>
+                <th>Tên khoản phí</th>
+                <th>Số tiền</th>
+                <th>Ngày hết hạn</th>
+                <th>Trạng thái</th>
+              </tr>
+            </thead>
+            <tbody>
+              {Array.isArray(dataFee) && dataFee.length > 0 ? (
+                dataFee.map((item, index) => (
+                  <tr key={item._id}>
+                    <td>{index + 1}</td>
+                    <td>{item.nameFee}</td>
+                    <td>
+                      {checkPrice(item)
+                        ? checkPrice(item).toLocaleString("vi-VN") + "đ"
+                        : ""}
+                    </td>
+                    <td>{formatDateString(item.endDate)}</td>
+                    <td style={getStatusStyle(item.status)}>{item.status}</td>
+                  </tr>
+                ))
+              ) : (
+                <tr>
+                  <td colSpan="7">Không có khoản phí nào cho người này</td>
+                </tr>
+              )}
+            </tbody>
+          </table>
           <div className="btn-plus-department-all">
             <Button
               className="btn-plus-child-1"

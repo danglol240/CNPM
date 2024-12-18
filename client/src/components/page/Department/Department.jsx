@@ -15,6 +15,7 @@ const Department = () => {
   const [openPlus, setOpenPlus] = useState(false);
   const [openEdit, setOpenEdit] = useState(false);
   const [editData, setEditData] = useState([]);
+  const [dataPeople, setDataPeople] = useState([]);
 
   useEffect(() => {
     const fetchData = async () => {
@@ -25,6 +26,21 @@ const Department = () => {
       } catch (error) {
         console.error("Error fetching data: ", error);
       }
+
+      try {
+        const response = await axios.get("http://localhost:8080/people");
+        setDataPeople(response.data.data);
+        setRetryCount(0); // Reset retry count on successful fetch
+      } catch (err) {
+        console.log("Lỗi: ", err);
+        if (retryCount < 3) {
+          // Giới hạn số lần thử lại
+          setTimeout(() => {
+            setRetryCount(retryCount + 1);
+          }, 3000); // Thử lại sau 3 giây
+        }
+      }
+
     };
     fetchData();
   }, []);
@@ -47,7 +63,7 @@ const Department = () => {
     setOpenEdit(false);
   };
 
- const filterData = (value) => {
+  const filterData = (value) => {
   if (!value) return dataDepartment;
   switch (selectedOption) {
     case "Tầng":
@@ -77,6 +93,7 @@ const Department = () => {
   }
 };
   
+ 
 
   const onChange = (e) => {
     setValuesearchData(e.target.value);
@@ -213,42 +230,40 @@ const Department = () => {
               <th style={{width:"15%"}}>Tùy chọn</th>
             </tr>
           </thead>
-          {/* <thead> */}
           <tbody>
-            {Array.isArray(searchData) && searchData.length === 0 ? (
-              <tr>
-                <td colSpan="7">Không tìm thấy kết quả phù hợp</td>
-              </tr>
-            ) : (
-              searchData.map((item, index) => {
-               const person = dataPeople.find((p) => p._id === item.purchaser); // Tìm người theo ID
-               const purchaserName = person ? person.namePeople : "Không xác định"; // Lấy tên hoặc hiển thị giá trị mặc định
-               return  (
-                <tr key={item._id}>
-                  <td style={{width:"5%"}}>{index + 1}</td>
-                  <td style={{width:"12.5%"}}>{item.floor}</td>
-                  <td style={{width:"12.5%"}}>{item.roomNumber}</td>
-                  <td style={{width:"10%"}}>{item.acreage}</td>
-                  <td style={{width:"30%"}}>{purchaserName}</td>
-                  <td style={{width:"15%"}}>{item.status}</td>
-                  <td className="btn-table-department" style={{width:"15%"}}>
-                    <Button type="primary" onClick={() => onClickEdit(item)}>
-                      Chỉnh sửa
-                    </Button>
-                    <Button
-                      type="primary"
-                      style={{ backgroundColor: "red" }}
-                      onClick={() => showDeleteConfirm(item)}
-                    >
-                      Xóa
-                    </Button>
-                  </td>
-                </tr>
-              );
-              })
-            )}
-          </tbody>
-          {/* </thead> */}
+  {Array.isArray(searchData) && searchData.length === 0 ? (
+    <tr>
+      <td colSpan="7">Không tìm thấy kết quả phù hợp</td>
+    </tr>
+  ) : (
+    searchData.map((item, index) => {
+      const person = dataPeople.find((p) => p._id === item.purchaser); // Tìm người theo ID
+      const purchaserName = person ? person.namePeople : "Không xác định"; // Lấy tên hoặc hiển thị giá trị mặc định
+      return (
+        <tr key={item._id}>
+          <td style={{width:"5%"}}>{index + 1}</td>
+          <td style={{width:"12.5%"}}>{item.floor}</td>
+          <td style={{width:"12.5%"}}>{item.roomNumber}</td>
+          <td style={{width:"10%"}}>{item.acreage}</td>
+          <td style={{width:"30%"}}>{purchaserName}</td> {/* Hiển thị tên thay vì ObjectID */}
+          <td style={{width:"15%"}}>{item.status}</td>
+          <td className="btn-table-department" style={{width:"15%"}}>
+            <Button type="primary" onClick={() => onClickEdit(item)}>
+              Chỉnh sửa
+            </Button>
+            <Button
+              type="primary"
+              style={{ backgroundColor: "red" }}
+              onClick={() => showDeleteConfirm(item)}
+            >
+              Xóa
+            </Button>
+          </td>
+        </tr>
+      );
+    })
+  )}
+</tbody>
         </table>
       </div>
     </div>

@@ -8,148 +8,173 @@ const Login = () => {
     userName: "",
     password: "",
   });
-  const [touched, setTouched] = useState({
-    userName: false,
-    password: false,
+  const [changePassword, setChangePassword] = useState({
+    oldPassword: "",
+    newPassword: "",
+    confirmNewPassword: "",
   });
+  const [isChangingPassword, setIsChangingPassword] = useState(false);
+  const [touched, setTouched] = useState({});
   const [loading, setLoading] = useState(false);
   const [errorLogin, setErrorLogin] = useState(false);
+
   const onBlurField = (field) => () => {
     setTouched({ ...touched, [field]: true });
+  };
+
+  const onChangeValue = (field) => (e) => {
+    setValue({ ...value, [field]: e.target.value });
     setErrorLogin(false);
   };
-  const onChangeValue = (item) => (e) => {
-    setValue({ ...value, [item]: e.target.value });
-    setErrorLogin(false);
+
+  const onChangePasswordField = (field) => (e) => {
+    setChangePassword({ ...changePassword, [field]: e.target.value });
   };
+
   const check = (field) => {
     if (!touched[field]) return true;
     if (!value[field]) return false;
     return true;
   };
-  // const submit = async (e) => {
-  //   e.preventDefault();
-  //   setLoading(true);
-  //   const url = "https://localhost:3000/login";
-  //   try {
-  //     const response = await fetch(url, {
-  //       method: "POST",
-  //       headers: {
-  //         "Content-type": "application/json",
-  //       },
-  //       body: JSON.stringify({
-  //         userName: value.userName,
-  //         password: value.password,
-  //       }),
-  //     });
-  //     if (response.ok) {
-  //       message.success("Đăng nhập thành công");
-  //       setValue({
-  //         userName: "",
-  //         password: "",
-  //       });
-  //       setTouched({
-  //         userName: false,
-  //         password: false,
-  //       });
-  //       navigate("/");
-  //     } else {
-  //       setErrorLogin(true);
-  //       setValue({
-  //         userName: "",
-  //         password: "",
-  //       });
-  //       setTouched({
-  //         userName: false,
-  //         password: false,
-  //       });
-  //     }
-  //   } catch (error) {
-  //     message.error("Lỗi mạng, xin vui lòng gửi lại");
-  //     setValue({
-  //       userName: "",
-  //       password: "",
-  //     });
-  //     setTouched({
-  //       userName: false,
-  //       password: false,
-  //     });
-  //   } finally {
-  //     setLoading(false);
-  //   }
-  // };
 
   const submit = async (e) => {
     e.preventDefault();
     setLoading(true);
 
-    // Giả lập API call
+    // Giả lập API call đăng nhập
     setTimeout(() => {
-      // Giả sử tên người dùng đúng là "admin" và mật khẩu là "admin123"
-      if (
-        value.userName === "danglol@gmail.com" &&
-        value.password === "dang2004"
-      ) {
+      if (value.userName === "admin@1" && value.password === "123") {
         message.success("Đăng nhập thành công");
         sessionStorage.setItem("checkLogin", true);
-        navigate("/"); // Chuyển đến trang chủ sau khi đăng nhập thành công
+        navigate("/");
       } else {
-        setErrorLogin(true); // Hiển thị thông báo lỗi
-        setValue({
-          userName: "",
-          password: "",
-        });
-        setTouched({
-          userName: false,
-          password: false,
-        });
+        setErrorLogin(true);
       }
       setLoading(false);
-    }, 1500); // Giả lập thời gian trễ là 1500 milliseconds
+    }, 1500);
   };
+
+  const handleChangePassword = async () => {
+    const { oldPassword, newPassword, confirmNewPassword } = changePassword;
+
+    // Kiểm tra điều kiện hợp lệ
+    if (!oldPassword || !newPassword || !confirmNewPassword) {
+      return message.error("Vui lòng nhập đầy đủ các trường.");
+    }
+    if (newPassword !== confirmNewPassword) {
+      return message.error("Mật khẩu mới và xác nhận mật khẩu không khớp.");
+    }
+    if (oldPassword === newPassword) {
+      return message.error("Mật khẩu mới không được giống mật khẩu cũ.");
+    }
+
+    setLoading(true);
+
+    // Gửi yêu cầu đổi mật khẩu (giả lập API call)
+    setTimeout(() => {
+      message.success("Đổi mật khẩu thành công!");
+      setChangePassword({
+        oldPassword: "",
+        newPassword: "",
+        confirmNewPassword: "",
+      });
+      setIsChangingPassword(false);
+      setLoading(false);
+    }, 1500);
+  };
+
   return (
     <div className="background-login">
       <div className="login-background-child">
         <div className="login-all">
           <div className="form-login-all">
-            <h3>QUẢN LÝ CHUNG CƯ BLUEMOON </h3>
-            <form className="form-login" onSubmit={submit}>
-              <Input
-                value={value.userName}
-                onChange={onChangeValue("userName")}
-                type="email"
-                className="input-login"
-                placeholder="Tên đăng nhập"
-                onBlur={onBlurField("userName")}
-              />
-              {!check("userName") && (
-                <p className="error-login">Xin vui lòng nhập tên đăng nhập</p>
-              )}
-              {errorLogin && (
-                <p className="error-login">
-                  Thông tin tài khoản hoặc mật khẩu không chính xác
-                </p>
-              )}
-              <Input
-                value={value.password}
-                onChange={onChangeValue("password")}
-                type="password"
-                className="input-login"
-                placeholder="Mật khẩu"
-                onBlur={onBlurField("password")}
-              />
-              {!check("password") && (
-                <p className="error-login">Xin vui lòng nhập mật khẩu</p>
-              )}
-              <Button
-                className="btn-login"
-                type="primary"
-                htmlType="submit"
-                loading={loading}
-              >
-                Đăng nhập
-              </Button>
-            </form>
+            <h3>QUẢN LÝ CHUNG CƯ BLUEMOON</h3>
+
+            {!isChangingPassword ? (
+              // Form Đăng nhập
+              <form className="form-login" onSubmit={submit}>
+                <Input
+                  value={value.userName}
+                  onChange={onChangeValue("userName")}
+                  type="email"
+                  className="input-login"
+                  placeholder="Tên đăng nhập"
+                  onBlur={onBlurField("userName")}
+                />
+                {!check("userName") && (
+                  <p className="error-login">Xin vui lòng nhập tên đăng nhập</p>
+                )}
+                {errorLogin && (
+                  <p className="error-login">
+                    Thông tin tài khoản hoặc mật khẩu không chính xác
+                  </p>
+                )}
+                <Input
+                  value={value.password}
+                  onChange={onChangeValue("password")}
+                  type="password"
+                  className="input-login"
+                  placeholder="Mật khẩu"
+                  onBlur={onBlurField("password")}
+                />
+                {!check("password") && (
+                  <p className="error-login">Xin vui lòng nhập mật khẩu</p>
+                )}
+                <Button
+                  className="btn-login"
+                  type="primary"
+                  htmlType="submit"
+                  loading={loading}
+                >
+                  Đăng nhập
+                </Button>
+                <Button
+                  type="link"
+                  onClick={() => setIsChangingPassword(true)}
+                >
+                  Đổi mật khẩu
+                </Button>
+              </form>
+            ) : (
+              // Form Đổi mật khẩu
+              <div className="form-login">
+                <Input
+                  value={changePassword.oldPassword}
+                  onChange={onChangePasswordField("oldPassword")}
+                  type="password"
+                  className="input-login"
+                  placeholder="Mật khẩu cũ"
+                />
+                <Input
+                  value={changePassword.newPassword}
+                  onChange={onChangePasswordField("newPassword")}
+                  type="password"
+                  className="input-login"
+                  placeholder="Mật khẩu mới"
+                />
+                <Input
+                  value={changePassword.confirmNewPassword}
+                  onChange={onChangePasswordField("confirmNewPassword")}
+                  type="password"
+                  className="input-login"
+                  placeholder="Xác nhận mật khẩu mới"
+                />
+                <Button
+                  className="btn-login"
+                  type="primary"
+                  onClick={handleChangePassword}
+                  loading={loading}
+                >
+                  Đổi mật khẩu
+                </Button>
+                <Button
+                  type="link"
+                  onClick={() => setIsChangingPassword(false)}
+                >
+                  Quay lại đăng nhập
+                </Button>
+              </div>
+            )}
           </div>
         </div>
       </div>
