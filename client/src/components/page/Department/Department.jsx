@@ -44,7 +44,9 @@ const Department = () => {
     };
     fetchData();
   }, []);
-
+  const countPeopleInRoom = (roomNumber) => {
+    return dataPeople.filter((person) => person.departments.roomNumber === roomNumber).length;
+  };
   const toggleDropdown = () => setIsOpen(!isOpen);
 
   const handleSelect = (option) => {
@@ -219,35 +221,38 @@ const Department = () => {
           </div>
         </div>
         <table className="table-container">
-          <thead>
-            <tr>
-              <th style={{width:"5%"}}>STT</th>
-              <th style={{width:"12.5%"}}>Tầng</th>
-              <th style={{width:"12.5%"}}>Số phòng</th>
-              <th style={{width:"10%"}}>Diện tích</th>
-              <th style={{width:"30%"}}>Chủ sở hữu</th>
-              <th style={{width:"15%"}}>Trạng thái</th>
-              <th style={{width:"15%"}}>Tùy chọn</th>
-            </tr>
-          </thead>
-          <tbody>
+        <thead>
+  <tr>
+    <th style={{ width: "5%" }}>STT</th>
+    <th style={{ width: "12.5%" }}>Tầng</th>
+    <th style={{ width: "12.5%" }}>Số phòng</th>
+    <th style={{ width: "10%" }}>Diện tích</th>
+    <th style={{ width: "15%" }}>Số người</th> {/* Cột mới */}
+    <th style={{ width: "30%" }}>Chủ sở hữu</th>
+    <th style={{ width: "15%" }}>Trạng thái</th>
+    <th style={{ width: "15%" }}>Tùy chọn</th>
+  </tr>
+</thead>
+<tbody>
   {Array.isArray(searchData) && searchData.length === 0 ? (
     <tr>
-      <td colSpan="7">Không tìm thấy kết quả phù hợp</td>
+      <td colSpan="8">Không tìm thấy kết quả phù hợp</td> {/* Thay đổi colspan thành 8 */}
     </tr>
   ) : (
     searchData.map((item, index) => {
-      const person = dataPeople.find((p) => p._id === item.purchaser); // Tìm người theo ID
-      const purchaserName = person ? person.namePeople : "Không xác định"; // Lấy tên hoặc hiển thị giá trị mặc định
+      const person = dataPeople.find((p) => p._id === item.purchaser);
+      const purchaserName = person ? person.namePeople : "Không xác định";
+      const peopleCount = countPeopleInRoom(item.roomNumber); // Đếm số người trong phòng
       return (
         <tr key={item._id}>
-          <td style={{width:"5%"}}>{index + 1}</td>
-          <td style={{width:"12.5%"}}>{item.floor}</td>
-          <td style={{width:"12.5%"}}>{item.roomNumber}</td>
-          <td style={{width:"10%"}}>{item.acreage}</td>
-          <td style={{width:"30%"}}>{purchaserName}</td> {/* Hiển thị tên thay vì ObjectID */}
-          <td style={{width:"15%"}}>{item.status}</td>
-          <td className="btn-table-department" style={{width:"15%"}}>
+          <td style={{ width: "5%" }}>{index + 1}</td>
+          <td style={{ width: "12.5%" }}>{item.floor}</td>
+          <td style={{ width: "12.5%" }}>{item.roomNumber}</td>
+          <td style={{ width: "10%" }}>{item.acreage}</td>
+          <td style={{ width: "15%" }}>{peopleCount}</td> {/* Cột số lượng người */}
+          <td style={{ width: "30%" }}>{purchaserName}</td>
+          <td style={{ width: "15%" }}>{item.status}</td>
+          <td className="btn-table-department" style={{ width: "15%" }}>
             <Button type="primary" onClick={() => onClickEdit(item)}>
               Chỉnh sửa
             </Button>
