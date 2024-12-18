@@ -47,29 +47,36 @@ const Department = () => {
     setOpenEdit(false);
   };
 
-  const filterData = (value) => {
-    if (!value) return dataDepartment;
-    switch (selectedOption) {
-      case "Tầng":
-        return dataDepartment.filter((item) => item.floor == value);
-      case "Số phòng":
-        return dataDepartment.filter((item) => item.roomNumber == value);
-      case "Diện tích":
-        return dataDepartment.filter((item) => item.acreage == value);
-      case "Chủ sở hữu":
-        return dataDepartment.filter(
-          (item) =>
-            item.purchaser &&
-            item.purchaser.toLowerCase().includes(value.toLowerCase())
-        );
-      case "Trạng thái":
-        return dataDepartment.filter((item) =>
-          item.status.toLowerCase().includes(value.toLowerCase())
-        );
-      default:
-        return dataDepartment;
-    }
-  };
+ const filterData = (value) => {
+  if (!value) return dataDepartment;
+  switch (selectedOption) {
+    case "Tầng":
+      return dataDepartment.filter((item) => item.floor == value);
+    case "Số phòng":
+      return dataDepartment.filter((item) => item.roomNumber == value);
+    case "Diện tích":
+      return dataDepartment.filter((item) => item.acreage == value);
+    case "Chủ sở hữu":
+      return dataDepartment
+        .map((item) => {
+          const person = dataPeople.find((p) => p._id === item.purchaser);
+          return {
+            ...item,
+            purchaser: person ? person.namePeople : "", // Thay đổi purchaser thành tên
+          };
+        })
+        .filter((item) =>
+          item.purchaser.toLowerCase().includes(value.toLowerCase())
+        ); // Lọc theo tên
+    case "Trạng thái":
+      return dataDepartment.filter((item) =>
+        item.status.toLowerCase().includes(value.toLowerCase())
+      );
+    default:
+      return dataDepartment;
+  }
+};
+  
 
   const onChange = (e) => {
     setValuesearchData(e.target.value);
@@ -213,13 +220,16 @@ const Department = () => {
                 <td colSpan="7">Không tìm thấy kết quả phù hợp</td>
               </tr>
             ) : (
-              searchData.map((item, index) => (
+              searchData.map((item, index) => {
+               const person = dataPeople.find((p) => p._id === item.purchaser); // Tìm người theo ID
+               const purchaserName = person ? person.namePeople : "Không xác định"; // Lấy tên hoặc hiển thị giá trị mặc định
+               return  (
                 <tr key={item._id}>
                   <td style={{width:"5%"}}>{index + 1}</td>
                   <td style={{width:"12.5%"}}>{item.floor}</td>
                   <td style={{width:"12.5%"}}>{item.roomNumber}</td>
                   <td style={{width:"10%"}}>{item.acreage}</td>
-                  <td style={{width:"30%"}}>{item.purchaser}</td>
+                  <td style={{width:"30%"}}>{purchaserName}</td>
                   <td style={{width:"15%"}}>{item.status}</td>
                   <td className="btn-table-department" style={{width:"15%"}}>
                     <Button type="primary" onClick={() => onClickEdit(item)}>
@@ -234,7 +244,8 @@ const Department = () => {
                     </Button>
                   </td>
                 </tr>
-              ))
+              );
+              })
             )}
           </tbody>
           {/* </thead> */}
