@@ -14,6 +14,20 @@ const EditDepartment = ({ onClickCloseEdit, editData }) => {
     status: editData.status,
   });
 
+  const [dataPeople, setDataPeople] = useState([]);
+
+  useEffect(() => {
+    const fetchDataPeople = async () => {
+      try {
+        const { data } = await axios.get("http://localhost:8080/people");
+        setDataPeople(data.data); // Lưu danh sách người
+      } catch (error) {
+        console.error("Error fetching people data:", error);
+      }
+    };
+    fetchDataPeople();
+  }, []);
+
 
   console.log(editData.purchaser);
  
@@ -122,8 +136,10 @@ const EditDepartment = ({ onClickCloseEdit, editData }) => {
           <div className="title-input-plus-department">
             <label>Chủ sở hữu</label>
             <Input
-              value={value.purchaser}
-              onChange={onChangeValue("purchaser")}
+              value={
+                dataPeople.find((person) => person._id === value.purchaser)?.namePeople ||
+                "Không xác định"
+              }
               disabled
             />
           </div>
