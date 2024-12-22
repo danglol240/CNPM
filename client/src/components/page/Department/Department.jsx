@@ -43,7 +43,7 @@ const Department = () => {
 
     };
     fetchData();
-  }, []);
+  }, [dataDepartment]);
   const countPeopleInRoom = (roomNumber) => {
     return dataPeople.filter((person) => person.departments.roomNumber === roomNumber).length;
   };
@@ -159,7 +159,7 @@ const Department = () => {
       }
     };
     fetchData();
-  }, [retryCount]);
+  }, [dataDepartmentEmpty]);
 
 
   return (
