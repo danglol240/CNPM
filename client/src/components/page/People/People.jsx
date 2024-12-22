@@ -50,7 +50,7 @@ const People = () => {
       }
     };
     fetchData();
-  }, [retryCount]);
+  }, [dataDepartment]);
   console.log(dataDepartment);
 
   const toggleDropdown = () => setIsOpen(!isOpen);
