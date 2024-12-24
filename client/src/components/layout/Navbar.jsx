@@ -68,16 +68,16 @@ const Navbar = () => {
             Thu phí
           </li>
         </NavLink>
-        <NavLink
+      </ul>
+      <NavLink
           to="/vehicle"
           onClick={(e) => handleNavigation(e, "/vehicle")}
           className={({ isActive }) => (isActive ? "active-link" : "inactive-link")}
         >
-          <li>
+          <li className="vehicle">
             Phương Tiện
           </li>
         </NavLink>
-      </ul>
       {check ? (
         <Button 
           onClick={logOut} 
@@ -96,3 +96,4 @@ const Navbar = () => {
 };
 
 export default Navbar;
+
