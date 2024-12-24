@@ -4,7 +4,9 @@ import { Button, Input, Modal, message } from "antd";
 import { FaPlusCircle } from "react-icons/fa";
 import { TiArrowUnsorted } from "react-icons/ti";
 import axios from "axios";
-import CheckVehicle from "./CheckVehicle/CheckVehicle"
+import AddVehicle from "./AddVehicle/AddVehicle";
+//import CheckVehicle from "./CheckVehicle/CheckVehicle"
+//import AddVehicle from "./AddVehicle/AddVehicle";
 
 const Vehicle = () => {
   const [dataDepartment, setDataDepartment] = useState([]);
@@ -17,6 +19,7 @@ const Vehicle = () => {
   const [editData, setEditData] = useState([]);
   const [dataPeople, setDataPeople] = useState([]);
   const [checkData, setCheckData] = useState([]);
+  const [retryCount, setRetryCount] = useState(0); // Add retryCount state
 
   useEffect(() => {
     const fetchData = async () => {
@@ -41,10 +44,10 @@ const Vehicle = () => {
           }, 3000); // Thử lại sau 3 giây
         }
       }
-
     };
     fetchData();
-  }, [dataDepartment]);
+  }, [retryCount]); // Change dependency to retryCount
+
   const countPeopleInRoom = (roomNumber) => {
     return dataPeople.filter((person) => person.departments.roomNumber === roomNumber).length;
   };
@@ -145,7 +148,6 @@ const Vehicle = () => {
   };
 
   const [dataDepartmentEmpty, setDataDepartmentEmpty] = useState([]);
-  const [retryCount, setRetryCount] = useState(0);
 
   useEffect(() => {
     const fetchData = async () => {
@@ -172,7 +174,7 @@ const Vehicle = () => {
 
   return (
     <div className="department-all">
-      {openPlus && <PlusVehicle onClickPlus={onClickPlus} />}
+      {openPlus && <AddVehicle onClickPlus={onClickPlus} />}
       {openEdit && (
         <EditVehicle
           onClickCloseEdit={onClickCloseEdit}
