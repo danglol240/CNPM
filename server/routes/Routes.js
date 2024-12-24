@@ -5,6 +5,7 @@ import PeopleController from "../controller/PeopleController.js";
 import DepartmentMiddleware from "../middleware/DepartmentMiddleware.js";
 import PeopleMiddleware from "../middleware/PeopleMiddleware.js";
 import FeeMiddleware from "../middleware/FeeMiddleware.js";
+import VehicalController from "../controller/VehicalController.js";
 
 const routes = express.Router();
 
@@ -45,4 +46,9 @@ routes.delete(
   PeopleController.deletePeople
 );
 
+routes.post("/vehicals", VehicalController.createVehical);
+routes.get("/vehicals", VehicalController.getAllVehical);
+routes.delete("/vehicals/:id", VehicalController.deleteVehical);
+routes.put("/vehicals/:id", VehicalController.updateVehical);
+routes.get("/vehicalsAddRoom", VehicalController.getRoomAddVehical);
 export default routes;
