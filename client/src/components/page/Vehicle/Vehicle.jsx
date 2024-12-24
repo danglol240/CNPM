@@ -189,7 +189,7 @@ const Vehicle = () => {
       )}
 
       <div className="department">
-        <h2>Căn hộ</h2>
+        <h2>Phương Tiện</h2>
         <div className="depart-2">
         <div className="depart-statistical">
           <p>Tổng số căn hộ : {dataDepartment.length}</p>
