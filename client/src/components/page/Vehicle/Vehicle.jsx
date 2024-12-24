@@ -240,8 +240,8 @@ const Vehicle = () => {
           <tr>
             <th style={{ width: "10%" }}>STT</th>
             <th style={{ width: "25%" }}>Số phòng</th>
-            <th style={{ width: "25%" }}>Chủ sở hữu</th>
-            <th style={{ width: "15%" }}>Số lượng xe</th>
+            <th style={{ width: "25%" }}>Số lượng phương tiện</th>
+            <th style={{ width: "15%" }}>Tùy chỉnh</th>
           </tr>
         </thead>
         <tbody>

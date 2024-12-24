@@ -30,7 +30,7 @@ const AddVehicle = ({ onClickPlus }) => {
 
   return (
     <Modal
-      title="Thêm xe mới"
+      title="Thêm Phương Tiện Mới"
       visible={true}
       onCancel={onClickPlus}
       footer={null}
