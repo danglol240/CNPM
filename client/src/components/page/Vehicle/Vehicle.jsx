@@ -192,10 +192,7 @@ const Vehicle = () => {
         <h2>Phương Tiện</h2>
         <div className="depart-2">
         <div className="depart-statistical">
-          <p>Tổng số căn hộ : {dataDepartment.length}</p>
-        </div>
-        <div className="depart-statistical">
-          <p>Số căn hộ còn trống : {dataDepartmentEmpty.length}</p>
+          <p>Tổng số lượng xe : {dataDepartment.length}</p>
         </div>
       </div>
         <Button
