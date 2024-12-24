@@ -12,6 +12,7 @@ import Department from "./components/page/Department/Department";
 import Fee from "./components/page/Fee/Fee";
 import People from "./components/page/People/People";
 import Home from "./components/page/Home/Home";
+import Vehicle from "./components/page/Vehicle/Vehicle";
 import "./App.css";
 
 // PrivateRoute component to handle protected routes
@@ -68,6 +69,14 @@ const App = () => {
           element={
             <PrivateRoute>
               <People />
+            </PrivateRoute>
+          }
+        />
+        <Route
+          path="/vehicle"
+          element={
+            <PrivateRoute>
+              <Vehicle />
             </PrivateRoute>
           }
         />

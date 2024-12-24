@@ -68,6 +68,15 @@ const Navbar = () => {
             Thu phí
           </li>
         </NavLink>
+        <NavLink
+          to="/vehicle"
+          onClick={(e) => handleNavigation(e, "/vehicle")}
+          className={({ isActive }) => (isActive ? "active-link" : "inactive-link")}
+        >
+          <li>
+            Phương Tiện
+          </li>
+        </NavLink>
       </ul>
       {check ? (
         <Button 
