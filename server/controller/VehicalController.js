@@ -75,7 +75,7 @@ const VehicalController = {
   getRoomAddVehical: async (req, res) => {
     try {
       const roomAddPeople = await DepartmentModel.find({
-        status: { $in: ["Trống", "Đã thuê"] },
+        status: { $in: ["Đã thuê"] },
       });
       const roomNumbers = roomAddPeople.map((room) => room.roomNumber);
       res.status(200).send({ message: "successfully", dataRoom: roomNumbers });
