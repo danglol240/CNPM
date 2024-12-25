@@ -16,7 +16,7 @@ const AddVehicle = ({ onClickPlus }) => {
   useEffect(() => {
     const fetchRooms = async () => {
       try {
-        const response = await axios.get("http://localhost:8080/peopleAddRoom");
+        const response = await axios.get("http://localhost:8080/vehicalsAddRoom");
         if (response.status === 200) {
           setRooms(response.data.dataRoom);
         }
