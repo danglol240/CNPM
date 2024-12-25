@@ -89,25 +89,71 @@ const EditDepartment = ({ onClickCloseEdit, editData }) => {
     return dataPeople.filter((person) => person.departments.roomNumber === roomNumber).length;
   };
   
-  const checkPrice = (item) => {
-    const roomNumberFee = item.roomNumber.find(
-      (e) => e.purchaser === editData.purchaser
-    );
-    if (
-      item.typeFee.trim() === "Phí phòng" &&
-      roomNumberFee &&
-      roomNumberFee.acreage
-    ) {
-      return item.price * roomNumberFee.acreage;
-    } else if (
-      item.typeFee.trim() === "Phí tính theo người" &&
-      roomNumberFee
-    ) {
-      return item.price * countPeopleInRoom(roomNumberFee.roomNumber);
-    } else {
-      return item.price;
+  const [roomVehicleCounts, setRoomVehicleCounts] = useState({});
+
+useEffect(() => {
+  const fetchVehicals = async () => {
+    try {
+      const { data } = await axios.get("http://localhost:8080/vehicals");
+      const vehicals = data.vehicals;
+
+      // Biến lưu trữ số lượng xe theo số phòng
+      const roomVehicleCounts = {};
+
+      vehicals.forEach((vehical) => {
+        const roomNumber = vehical.roomNumber;
+
+        // Nếu chưa có số phòng trong đối tượng, khởi tạo
+        if (!roomVehicleCounts[roomNumber]) {
+          roomVehicleCounts[roomNumber] = { motorbikeCount: 0, carCount: 0 };
+        }
+
+        // Cộng số xe máy và ô tô vào số phòng tương ứng
+        roomVehicleCounts[roomNumber].motorbikeCount += vehical.motorbikes.length;
+        roomVehicleCounts[roomNumber].carCount += vehical.cars.length;
+      });
+
+      // Cập nhật trạng thái tổng xe
+      setRoomVehicleCounts(roomVehicleCounts);
+
+      // Thêm console.log để kiểm tra dữ liệu
+      console.log("Room Vehicle Counts:", roomVehicleCounts);
+    } catch (error) {
+      console.error("Error fetching vehicals data:", error);
     }
   };
+
+  fetchVehicals();
+}, []);
+
+const checkPrice = (item) => {
+  const roomNumberFee = item.roomNumber.find(
+    (e) => e.purchaser === editData.purchaser
+  );
+  if (
+    item.typeFee.trim() === "Phí phòng" &&
+    roomNumberFee &&
+    roomNumberFee.acreage
+  ) {
+    return item.price * roomNumberFee.acreage;
+  } else if (
+    item.typeFee.trim() === "Phí tính theo người" &&
+    roomNumberFee
+  ) {
+    return item.price * countPeopleInRoom(roomNumberFee.roomNumber);
+  } else if (
+    item.typeFee.trim() === "Phí phương tiện" &&
+    roomNumberFee
+  ) {
+    const vehicleCounts = roomVehicleCounts[roomNumberFee.roomNumber] || { motorbikeCount: 0, carCount: 0 };
+    return item.price * vehicleCounts.motorbikeCount * 1/5 + item.price * vehicleCounts.carCount;
+  } else {
+    return item.price;
+  }
+};
+  
+
+
 
   const getStatusStyle = (status) => {
     return status === "Đã đóng"
