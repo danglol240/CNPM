@@ -85,6 +85,10 @@ const EditDepartment = ({ onClickCloseEdit, editData }) => {
     getDataRoom();
   }, []);
 
+  const countPeopleInRoom = (roomNumber) => {
+    return dataPeople.filter((person) => person.departments.roomNumber === roomNumber).length;
+  };
+  
   const checkPrice = (item) => {
     const roomNumberFee = item.roomNumber.find(
       (e) => e.purchaser === editData.purchaser
@@ -95,6 +99,11 @@ const EditDepartment = ({ onClickCloseEdit, editData }) => {
       roomNumberFee.acreage
     ) {
       return item.price * roomNumberFee.acreage;
+    } else if (
+      item.typeFee.trim() === "Phí tính theo người" &&
+      roomNumberFee
+    ) {
+      return item.price * countPeopleInRoom(roomNumberFee.roomNumber);
     } else {
       return item.price;
     }
