@@ -21,29 +21,22 @@ const Department = () => {
     const fetchData = async () => {
       try {
         const { data } = await axios.get("http://localhost:8080/department");
-        setDataDepartment(data.data);
+        setDataDepartment(data.data); // Update state
         console.log(data);
       } catch (error) {
         console.error("Error fetching data: ", error);
       }
-
+  
       try {
         const response = await axios.get("http://localhost:8080/people");
-        setDataPeople(response.data.data);
-        setRetryCount(0); // Reset retry count on successful fetch
+        setDataPeople(response.data.data); // Update state
       } catch (err) {
         console.log("Lỗi: ", err);
-        if (retryCount < 3) {
-          // Giới hạn số lần thử lại
-          setTimeout(() => {
-            setRetryCount(retryCount + 1);
-          }, 3000); // Thử lại sau 3 giây
-        }
       }
-
     };
+  
     fetchData();
-  }, [dataDepartment]);
+  }, []); // Empty array ensures the effect runs only once
   const countPeopleInRoom = (roomNumber) => {
     return dataPeople.filter((person) => person.departments.roomNumber === roomNumber).length;
   };
