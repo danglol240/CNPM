@@ -6,10 +6,12 @@ const { Option } = Select;
 
 const AddVehicle = ({ onClickPlus }) => {
   const [vehicleType, setVehicleType] = useState("");
-  const [licensePlate, setLicensePlate] = useState("");
+  const [licensePlates, setLicensePlates] = useState([""]);
   const [roomNumber, setRoomNumber] = useState("");
   const [rooms, setRooms] = useState([]);
-  const [inputRoomType, setInputRoomType] = useState("select"); // Kiểm soát cách nhập số phòng (chọn hoặc nhập)
+  const [inputRoomType, setInputRoomType] = useState("select");
+  const [motorbikes, setMotorbikes] = useState([]);
+  const [cars, setCars] = useState([]);
 
   useEffect(() => {
     const fetchRooms = async () => {
@@ -25,18 +27,33 @@ const AddVehicle = ({ onClickPlus }) => {
     fetchRooms();
   }, []);
 
+  const handleAddVehicle = () => {
+    if (!vehicleType || !licensePlates.some((plate) => plate) || !roomNumber) {
+      message.error("Vui lòng nhập đầy đủ thông tin!");
+      return;
+    }
+
+    if (vehicleType === "Xe máy") {
+      setMotorbikes([...motorbikes, ...licensePlates.filter((plate) => plate)]);
+    } else if (vehicleType === "Ô tô") {
+      setCars([...cars, ...licensePlates.filter((plate) => plate)]);
+    }
+    setLicensePlates([""]); // Reset các trường biển số
+    message.success("Đã thêm xe vào danh sách!");
+  };
+
   const handleSubmit = async () => {
     try {
       const response = await axios.post("http://localhost:8080/vehicals", {
         roomNumber,
-        motorbikes: vehicleType === "Xe máy" ? [licensePlate] : [],
-        cars: vehicleType === "Ô tô" ? [licensePlate] : [],
+        motorbikes,
+        cars,
       });
-      message.success("Thêm xe thành công");
-      onClickPlus(); // Đóng modal sau khi thêm thành công
+      message.success("Xác nhận thành công!");
+      onClickPlus(); // Đóng modal sau khi gửi dữ liệu thành công
     } catch (error) {
-      console.error("Error adding vehicle:", error);
-      message.error("Thêm xe thất bại");
+      console.error("Error submitting vehicles:", error);
+      message.error("Xác nhận thất bại!");
     }
   };
 
@@ -48,16 +65,33 @@ const AddVehicle = ({ onClickPlus }) => {
     setRoomNumber(roomNumber);
   };
 
+  const handleLicensePlateChange = (index, value) => {
+    const newLicensePlates = [...licensePlates];
+    newLicensePlates[index] = value;
+    setLicensePlates(newLicensePlates);
+  };
+
+  const addLicensePlateField = () => {
+    setLicensePlates([...licensePlates, ""]);
+  };
+
+  const removeLicensePlateField = (index) => {
+    const newLicensePlates = licensePlates.filter((_, i) => i !== index);
+    setLicensePlates(newLicensePlates);
+  };
+
+  const removePlateFromList = (plate, type) => {
+    if (type === "motorbike") {
+      setMotorbikes(motorbikes.filter((item) => item !== plate));
+    } else if (type === "car") {
+      setCars(cars.filter((item) => item !== plate));
+    }
+  };
+
   return (
-    <Modal
-      title="Thêm xe"
-      visible={true}
-      onCancel={onClickPlus}
-      footer={null}
-    >
-      <Form layout="vertical" onFinish={handleSubmit}>
+    <Modal title="Thêm xe" visible={true} onCancel={onClickPlus} footer={null}>
+      <Form layout="vertical">
         <Form.Item label="Phòng">
-          {/* Radio button để chọn cách nhập */}
           <Radio.Group
             onChange={(e) => setInputRoomType(e.target.value)}
             value={inputRoomType}
@@ -102,18 +136,66 @@ const AddVehicle = ({ onClickPlus }) => {
           </Select>
         </Form.Item>
         <Form.Item label="Biển số">
-          <Input
-            placeholder="Nhập biển số"
-            value={licensePlate}
-            onChange={(e) => setLicensePlate(e.target.value)}
-          />
+          {licensePlates.map((plate, index) => (
+            <div key={index} style={{ display: "flex", marginBottom: "10px" }}>
+              <Input
+                placeholder="Nhập biển số"
+                value={plate}
+                onChange={(e) => handleLicensePlateChange(index, e.target.value)}
+                style={{ marginRight: "10px" }}
+              />
+              <Button type="danger" onClick={() => removeLicensePlateField(index)}>
+                Xóa
+              </Button>
+            </div>
+          ))}
+          <Button type="dashed" onClick={addLicensePlateField}>
+            Thêm biển số
+          </Button>
         </Form.Item>
         <Form.Item>
-          <Button type="primary" htmlType="submit">
+          <Button type="default" onClick={handleAddVehicle} style={{ marginRight: "10px" }}>
             Thêm xe
+          </Button>
+          <Button type="primary" onClick={handleSubmit}>
+            Xác nhận
           </Button>
         </Form.Item>
       </Form>
+      <div>
+        <h3>Danh sách xe máy</h3>
+        <ul>
+          {motorbikes.map((plate, index) => (
+            <li key={index} style={{ display: "flex", alignItems: "center" }}>
+              {plate}
+              <Button
+                type="danger"
+                size="small"
+                style={{ marginLeft: "10px" }}
+                onClick={() => removePlateFromList(plate, "motorbike")}
+              >
+                Xóa
+              </Button>
+            </li>
+          ))}
+        </ul>
+        <h3>Danh sách ô tô</h3>
+        <ul>
+          {cars.map((plate, index) => (
+            <li key={index} style={{ display: "flex", alignItems: "center" }}>
+              {plate}
+              <Button
+                type="danger"
+                size="small"
+                style={{ marginLeft: "10px" }}
+                onClick={() => removePlateFromList(plate, "car")}
+              >
+                Xóa
+              </Button>
+            </li>
+          ))}
+        </ul>
+      </div>
     </Modal>
   );
 };
