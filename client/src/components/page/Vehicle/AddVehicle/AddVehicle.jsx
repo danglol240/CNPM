@@ -49,7 +49,7 @@ const AddVehicle = ({ onClickPlus }) => {
         motorbikes,
         cars,
       });
-      message.success("Xác nhận thành công!");
+      message.success("Xác nhận thành công!");    
       onClickPlus(); // Đóng modal sau khi gửi dữ liệu thành công
     } catch (error) {
       console.error("Error submitting vehicles:", error);

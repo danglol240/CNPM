@@ -10,11 +10,12 @@
     background-position: center;
 }
 
-.btn-plus-department {
+.btn-vehicle {
     height: 40px;
     font-size: 17px;
     font-weight: bold;
     width: 200px;
+    color: white;
 }
 
 .icon-btn-plus-department {
@@ -90,8 +91,9 @@
     text-align: center;
 }
 
-.search-department{
+.search-vehicle{
     display: flex;
+    flex-direction: row;
     gap: 30px;
     justify-content: space-around;
     width: 90%;

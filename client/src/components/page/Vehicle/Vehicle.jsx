@@ -60,6 +60,32 @@ const Vehicle = () => {
   };
 
   const searchData = filterData(valuesearchData);
+  const calculateTotalVehicles = (motorbikes, cars) => motorbikes.length + cars.length;
+
+  const showDeleteConfirm = (item) => {
+    Modal.confirm({
+      title: "Bạn có chắc chắn muốn xóa phương tiện này?",
+      content: `Phòng: ${item.roomNumber}, Xe máy: ${item.motorbikes.join(", ")}, Ô tô: ${item.cars.join(", ")}`,
+      okText: "Xóa",
+      okType: "danger",
+      cancelText: "Hủy bỏ",
+      async onOk() {
+        try {
+          const response = await axios.delete(`http://localhost:8080/vehicals/${item._id}`);
+          if (response.status === 200) {
+            // Xóa thành công, cập nhật lại danh sách phương tiện
+            setVehicalsData((prevData) => prevData.filter((x) => x._id !== item._id));
+            message.success("Xóa thành công!");
+          } else {
+            throw new Error("Failed to delete");
+          }
+        } catch (error) {
+          console.error("Error deleting vehicle:", error);
+          message.error("Xóa thất bại!");
+        }
+      },
+    });
+  };
 
   return (
     <div className="vehicles-all">
@@ -106,16 +132,17 @@ const Vehicle = () => {
               <th style={{ width: "20%" }}>Xe máy</th>
               <th style={{ width: "20%" }}>Ô tô</th>
               <th style={{ width: "10%" }}>Tổng số xe</th>
+              <th style={{ width: "10%" }}>Tùy chọn</th>
             </tr>
           </thead>
           <tbody>
             {Array.isArray(searchData) && searchData.length === 0 ? (
               <tr>
-                <td colSpan="5">Không tìm thấy kết quả phù hợp</td>
+                <td colSpan="6">Không tìm thấy kết quả phù hợp</td>
               </tr>
             ) : (
               searchData.map((item, index) => {
-                const totalVehicles = item.motorbikes.length + item.cars.length;
+                const totalVehicles = calculateTotalVehicles(item.motorbikes, item.cars);
                 return (
                   <tr key={item._id}>
                     <td style={{ width: "10%" }}>{index + 1}</td>
@@ -123,6 +150,11 @@ const Vehicle = () => {
                     <td style={{ width: "20%" }}>{item.motorbikes.join(", ") || "Không có"}</td>
                     <td style={{ width: "20%" }}>{item.cars.join(", ") || "Không có"}</td>
                     <td style={{ width: "10%" }}>{totalVehicles}</td>
+                    <td className="btn-vehicle" style={{ width: "10%" }}>
+                      <Button type="danger" style={{backgroundColor: "red", color: "white"}} onClick={() => showDeleteConfirm(item)}>
+                        Xóa
+                      </Button>
+                    </td>
                   </tr>
                 );
               })
