@@ -32,6 +32,10 @@ const Fee = () => {
       }
     };
     fetchData();
+    const interval = setInterval(() => {
+      fetchData();
+    }, 5000);
+    return () => clearInterval(interval);
   }, []);
 
   const toggleDropdown = () => setIsOpen(!isOpen);
@@ -233,7 +237,7 @@ const Fee = () => {
               ))
             ) : (
               <tr>
-                <td colSpan="8">Không tìm thấy dữ liệu phù hợp</td>
+                <td colSpan="8" style={{backgroundColor:"white"}}>Không tìm thấy dữ liệu phù hợp</td>
               </tr>
             )}
           </tbody>

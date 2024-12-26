@@ -5,6 +5,7 @@ import { FaPlusCircle } from "react-icons/fa";
 import { TiArrowUnsorted } from "react-icons/ti";
 import axios from "axios";
 import AddVehicle from "./AddVehicle/AddVehicle";
+import EditVehicle from "./EditVehicle/EditVehicle";
 
 const Vehicle = () => {
   const [vehicalsData, setVehicalsData] = useState([]);
@@ -12,6 +13,8 @@ const Vehicle = () => {
   const [selectedOption, setSelectedOption] = useState("Lựa chọn tìm kiếm");
   const [isOpen, setIsOpen] = useState(false);
   const [openPlus, setOpenPlus] = useState(false);
+  const [openEdit, setOpenEdit] = useState(false);
+  const [editData, setEditData] = useState(null); // Thêm useState cho editData
 
   const fetchVehicals = async () => {
     try {
@@ -24,6 +27,10 @@ const Vehicle = () => {
 
   useEffect(() => {
     fetchVehicals();
+    const interval = setInterval(() => {
+      fetchData();
+    }, 5000);
+    return () => clearInterval(interval);
   }, []);
 
   const toggleDropdown = () => setIsOpen(!isOpen);
@@ -59,6 +66,16 @@ const Vehicle = () => {
     }
   };
 
+  const onClickEdit = (item) => {
+    setOpenEdit(true);
+    setEditData(item);
+  };
+
+  const onClickCloseEdit = () => {
+    setOpenEdit(false);
+    setEditData(null);
+  };
+
   const searchData = filterData(valuesearchData);
   const calculateTotalVehicles = (motorbikes, cars) => motorbikes.length + cars.length;
 
@@ -90,15 +107,16 @@ const Vehicle = () => {
   return (
     <div className="vehicles-all">
       {openPlus && <AddVehicle onClickPlus={onClickPlus} />}
+      {openEdit && <EditVehicle onClickCloseEdit={onClickCloseEdit} editData={editData} />}
       <div className="vehicals-container">
         <h2>Phương Tiện</h2>
         <Button
-          className="btn-plus-department"
+          className="btn-plus-vehicle"
           type="primary"
           onClick={onClickPlus}
         >
-          <FaPlusCircle className="icon-btn-plus-department" size={20} />
-          Thêm phòng mới
+          <FaPlusCircle className="icon-btn-plus-vehicle" size={20} />
+          Thêm phương tiện
         </Button>
         <div className="search-vehicals">
           <Input
@@ -138,7 +156,7 @@ const Vehicle = () => {
           <tbody>
             {Array.isArray(searchData) && searchData.length === 0 ? (
               <tr>
-                <td colSpan="6">Không tìm thấy kết quả phù hợp</td>
+                <td colSpan="6" style={{backgroundColor:"white"}}>Không tìm thấy dữ liệu phù hợp</td>
               </tr>
             ) : (
               searchData.map((item, index) => {
@@ -151,6 +169,9 @@ const Vehicle = () => {
                     <td style={{ width: "20%" }}>{item.cars.join(", ") || "Không có"}</td>
                     <td style={{ width: "10%" }}>{totalVehicles}</td>
                     <td className="btn-vehicle" style={{ width: "10%" }}>
+                      <Button type="primary" onClick={() => onClickEdit(item)}>
+                      Chỉnh sửa
+                      </Button>
                       <Button type="danger" style={{backgroundColor: "red", color: "white"}} onClick={() => showDeleteConfirm(item)}>
                         Xóa
                       </Button>

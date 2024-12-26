@@ -50,8 +50,11 @@ const People = () => {
       }
     };
     fetchData();
-  }, [dataDepartment]);
-  console.log(dataDepartment);
+    const interval = setInterval(() => {
+      fetchData();
+    }, 5000);
+    return () => clearInterval(interval);
+  }, [retryCount]);
 
   const toggleDropdown = () => setIsOpen(!isOpen);
 
@@ -93,6 +96,10 @@ const People = () => {
       case "Số điện thoại":
         return dataDepartment.filter((item) =>
           item.phoneNumber.toLowerCase().includes(value.toLowerCase())
+        );
+      case "Số căn cước":
+        return dataDepartment.filter((item) =>
+          item.cccd.toLowerCase().includes(value.toLowerCase())
         );
       default:
         return dataDepartment;
@@ -198,10 +205,11 @@ const People = () => {
           <thead>
             <tr>
               <th style={{width:"5%"}}>STT</th>
-              <th style={{width:"30%"}}>Tên</th>
+              <th style={{width:"10%"}}>Tên</th>
               <th style={{width:"10%"}}>Số phòng</th>
               <th style={{width:"10%"}}>Giới tính</th>
               <th style={{width:"20%"}}>Số điện thoại</th>
+              <th style={{width:"20%"}}>Số căn cước</th>
               <th style={{width:"10%"}}>Ngày chuyển vào</th>
               <th style={{width:"15%"}}>Tùy chọn</th>
             </tr>
@@ -211,10 +219,11 @@ const People = () => {
               searchData.map((item, index) => (
                 <tr key={item._id}>
                   <td style={{width:"5%"}}>{index + 1}</td>
-                  <td style={{width:"30%"}}>{item.namePeople}</td>
+                  <td style={{width:"10%"}}>{item.namePeople}</td>
                   <td style={{width:"10%"}}>{item.departments.roomNumber}</td>
                   <td style={{width:"10%"}}>{item.gioitinh}</td>
                   <td style={{width:"20%"}}>{item.phoneNumber}</td>
+                  <td style={{width:"20%"}}>{item.cccd}</td>
                   <td style={{width:"10%"}}>{formatDate(item.moveInDate)}</td>
                   <td className="btn-table-department" style={{width:"15%"}}>
                     <Button type="primary" onClick={() => onClickEdit(item)}>
@@ -232,7 +241,7 @@ const People = () => {
               ))
             ) : (
               <tr>
-                <td colSpan="7">Không tìm thấy dữ liệu phù hợp</td>
+                <td colSpan="8" style={{backgroundColor:"white"}}>Không tìm thấy dữ liệu phù hợp</td>
               </tr>
             )}
           </tbody>

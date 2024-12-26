@@ -37,6 +37,7 @@ const Department = () => {
   
     fetchData();
   }, []); // Empty array ensures the effect runs only once
+
   const countPeopleInRoom = (roomNumber) => {
     return dataPeople.filter((person) => person.departments.roomNumber === roomNumber).length;
   };
@@ -152,7 +153,11 @@ const Department = () => {
       }
     };
     fetchData();
-  }, [dataDepartmentEmpty]);
+    const interval = setInterval(() => {
+      fetchData();
+    }, 5000); 
+    return () => clearInterval(interval);
+  }, [retryCount]);
 
 
   return (
@@ -229,7 +234,7 @@ const Department = () => {
         <tbody>
           {Array.isArray(searchData) && searchData.length === 0 ? (
             <tr>
-              <td colSpan="8">Không tìm thấy kết quả phù hợp</td> {/* Thay đổi colspan thành 8 */}
+              <td colSpan="8" style={{backgroundColor:"white"}}>Không tìm thấy dữ liệu phù hợp</td> {/* Thay đổi colspan thành 8 */}
             </tr>
           ) : (
             searchData.map((item, index) => {

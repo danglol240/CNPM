@@ -10,16 +10,15 @@
     background-position: center;
 }
 
-.btn-vehicle {
+.btn-plus-vehicle {
     height: 40px;
     font-size: 17px;
     font-weight: bold;
-    width: 200px;
+    width: 13%;
     color: white;
 }
 
-.icon-btn-plus-department {
-    margin-bottom: -4px;
+.icon-btn-plus-vehicle {
     margin-right: 5px;
 }
 
