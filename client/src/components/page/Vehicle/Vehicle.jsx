@@ -28,7 +28,7 @@ const Vehicle = () => {
   useEffect(() => {
     fetchVehicals();
     const interval = setInterval(() => {
-      fetchData();
+      fetchVehicals();
     }, 5000);
     return () => clearInterval(interval);
   }, []);

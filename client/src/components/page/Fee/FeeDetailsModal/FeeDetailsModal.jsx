@@ -102,8 +102,10 @@ const FeeDetailsModal = ({ visible, onClose, fee, updateFee }) => {
               placeholder="Chọn loại phí"
               style={{ padding: "0px", borderRadius: "8px" }}
             >
-              <Option value="Phí dịch vụ">Phí dịch vụ</Option>
-              <Option value="Phí phòng">Phí phòng</Option>
+              <Option value="Phí dịch vụ">Phí Dịch Vụ</Option>
+            <Option value="Phí phòng">Phí Phòng</Option>
+            <Option value="Phí phương tiện">Phí Phương Tiện</Option>
+            <Option value="Phí tính theo người">Phí Tính Theo Người</Option>
             </Select>
 
             <Input

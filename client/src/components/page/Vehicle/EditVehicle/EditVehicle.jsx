@@ -1,29 +1,58 @@
 import React, { useState, useEffect } from "react";
-import { Input, Button, message, Select } from "antd";
+import { Modal, Form, Input, Select, Button, message, Radio } from "antd";
 import axios from "axios";
-import "./EditVehicle.css";
 
 const { Option } = Select;
 
 const EditVehicle = ({ onClickCloseEdit, editData }) => {
   const [vehicleType, setVehicleType] = useState(editData.vehicleType || "");
-  const [licensePlates, setLicensePlates] = useState(editData.licensePlates || []);
+  const [licensePlates, setLicensePlates] = useState(editData.licensePlates || [""]);
   const [roomNumber, setRoomNumber] = useState(editData.roomNumber || "");
-  const [availableRooms, setAvailableRooms] = useState([]); // Khởi tạo là một mảng rỗng
+  const [rooms, setRooms] = useState([]);
+  const [inputRoomType, setInputRoomType] = useState("select");
+  const [motorbikes, setMotorbikes] = useState([]);
+  const [cars, setCars] = useState([]);
 
   useEffect(() => {
     const fetchRooms = async () => {
       try {
         const response = await axios.get("http://localhost:8080/vehicalsAddRoom");
         if (response.status === 200) {
-          setAvailableRooms(response.data.dataRoom || []); // Đảm bảo dữ liệu là một mảng
+          setRooms(response.data.dataRoom || []);
         }
       } catch (error) {
         console.error("Error fetching rooms:", error);
       }
     };
     fetchRooms();
-  }, []);
+
+    const fetchVehicles = async () => {
+      try {
+        const response = await axios.get("http://localhost:8080/vehicals");
+        if (response.status === 200) {
+          const vehicles = response.data.vehicals || [];
+          const filteredRoomVehicles = vehicles.reduce(
+            (acc, v) => ({
+              ...acc,
+              [v.roomNumber]: {
+                motorbikes: v.motorbikes || [],
+                cars: v.cars || [],
+              },
+            }),
+            {}
+          );
+          setMotorbikes(filteredRoomVehicles[roomNumber]?.motorbikes || []);
+          setCars(filteredRoomVehicles[roomNumber]?.cars || []);
+        }
+      } catch (error) {
+        console.error("Error fetching vehicles:", error);
+      }
+    };
+
+    if (roomNumber) {
+      fetchVehicles();
+    }
+  }, [roomNumber]);
 
   const handleLicensePlateChange = (index, value) => {
     const newLicensePlates = [...licensePlates];
@@ -40,97 +69,142 @@ const EditVehicle = ({ onClickCloseEdit, editData }) => {
     setLicensePlates(newLicensePlates);
   };
 
-  const handleSubmit = async (e) => {
-    e.preventDefault();
-    const updatedVehicle = {
-      roomNumber,
-      vehicleType,
-      licensePlates,
-    };
-    try {
-      await axios.put(`http://localhost:8080/vehicals/${editData._id}`, updatedVehicle);
-      message.success("Sửa thông tin phương tiện thành công");
-      onClickCloseEdit();
-    } catch (error) {
-      console.error("Error updating vehicle:", error);
-      message.error("Sửa thông tin phương tiện thất bại");
+  const removePlateFromList = (plate, type) => {
+    if (type === "motorbike") {
+      setMotorbikes(motorbikes.filter((item) => item !== plate));
+    } else if (type === "car") {
+      setCars(cars.filter((item) => item !== plate));
     }
   };
 
-  const handleInnerClick = (e) => {
-    e.stopPropagation();
+  const handleAddVehicle = () => {
+    if (!vehicleType || !licensePlates.some((plate) => plate) || !roomNumber) {
+      message.error("Vui lòng nhập đầy đủ thông tin!");
+      return;
+    }
+
+    if (vehicleType === "Xe máy") {
+      setMotorbikes([...motorbikes, ...licensePlates.filter((plate) => plate)]);
+    } else if (vehicleType === "Ô tô") {
+      setCars([...cars, ...licensePlates.filter((plate) => plate)]);
+    }
+    setLicensePlates([""]); // Reset các trường biển số
+    message.success("Đã thêm xe vào danh sách!");
+  };
+
+
+  const handleSubmit = async () => {
+    if (!roomNumber) {
+      message.error("Vui lòng nhập đầy đủ thông tin!");
+      return;
+    }
+  
+    const updatedVehicle = {
+      roomNumber,
+      motorbikes: vehicleType === "Xe máy" ? [...motorbikes, ...licensePlates.filter((plate) => plate)] : motorbikes,
+      cars: vehicleType === "Ô tô" ? [...cars, ...licensePlates.filter((plate) => plate)] : cars,
+    };
+  
+    try {
+      const response = await axios.put(`http://localhost:8080/vehicals/${editData._id}`, updatedVehicle);
+      message.success("Xác nhận thành công!");
+      onClickCloseEdit();
+    } catch (error) {
+      console.error("Error submitting vehicles:", error.response?.data || error);
+      message.error("Xác nhận thất bại!");
+    }
   };
 
   return (
-    <div className="edit-vehicle" onClick={onClickCloseEdit}>
-      <div className="edit-vehicle-child" onClick={handleInnerClick}>
-        <h2>Chỉnh sửa thông tin phương tiện</h2>
-        <form className="form-edit-vehicle" onSubmit={handleSubmit}>
-          <div className="form-edit-vehicle-child">
-            <div className="title-edit-vehicle">
-              <label>Số phòng</label>
-              <Select
-                value={roomNumber}
-                onChange={setRoomNumber}
-                style={{ width: 110, marginLeft: 20 }}
-              >
-                {availableRooms.map((room) => (
-                  <Option key={room} value={room}>
-                    Phòng {room}
-                  </Option>
-                ))}
-              </Select>
-            </div>
-            <div className="title-edit-vehicle">
-              <label>Loại xe</label>
-              <Select
-                value={vehicleType}
-                onChange={setVehicleType}
-                style={{ width: 120, marginLeft: 20 }}
-              >
-                <Option value="Xe máy">Xe máy</Option>
-                <Option value="Ô tô">Ô tô</Option>
-              </Select>
-            </div>
-            <div className="title-edit-vehicle">
-              <label>Biển số</label>
-              {licensePlates.map((plate, index) => (
-                <div key={index} style={{ display: "flex", marginBottom: "10px" }}>
-                  <Input
-                    placeholder="Nhập biển số"
-                    value={plate}
-                    onChange={(e) => handleLicensePlateChange(index, e.target.value)}
-                    style={{ marginRight: "10px" }}
-                  />
-                  <Button type="danger" onClick={() => removeLicensePlateField(index)}>
-                    Xóa
-                  </Button>
-                </div>
-              ))}
-              <Button type="dashed" onClick={addLicensePlateField}>
-                Thêm biển số
+    <Modal
+      title="Chỉnh sửa thông tin phương tiện"
+      visible={true}
+      onCancel={onClickCloseEdit}
+      footer={null}
+    >
+      <Form layout="vertical">
+        
+
+        <Form.Item label="Loại xe">
+          <Select
+            placeholder="Chọn loại xe"
+            value={vehicleType}
+            onChange={setVehicleType}
+            style={{ width: "100%" }}
+          >
+            <Option value="Xe máy">Xe máy</Option>
+            <Option value="Ô tô">Ô tô</Option>
+          </Select>
+        </Form.Item>
+
+        <Form.Item label="Biển số">
+          {licensePlates.map((plate, index) => (
+            <div key={index} style={{ display: "flex", marginBottom: "10px" }}>
+              <Input
+                placeholder="Nhập biển số"
+                value={plate}
+                onChange={(e) => handleLicensePlateChange(index, e.target.value)}
+                style={{ marginRight: "10px" }}
+              />
+              <Button type="danger" onClick={() => removeLicensePlateField(index)}>
+                Xóa
               </Button>
             </div>
-            <div className="btn-edit-vehicle-all">
+          ))}
+          <Button type="dashed" onClick={addLicensePlateField}>
+            Thêm biển số
+          </Button>
+        </Form.Item>
+
+        <Form.Item>
+        <Button type="default" onClick={handleAddVehicle} style={{ marginRight: "10px" }}>
+            Thêm xe
+          </Button>
+          <Button type="primary" onClick={handleSubmit} style={{ marginRight: "10px" }}>
+            Cập nhật
+          </Button>
+          <Button type="default" onClick={onClickCloseEdit}>
+            Hủy
+          </Button>
+        </Form.Item>
+      </Form>
+
+      <div>
+        <h3>Danh sách xe máy</h3>
+        <ul>
+          {motorbikes.map((plate, index) => (
+            <li key={index} style={{ display: "flex", alignItems: "center" }}>
+              {plate}
               <Button
-                className="btn-edit-child-1"
-                type="primary"
-                htmlType="submit"
+                type="danger"
+                size="small"
+                style={{ marginLeft: "10px" }}
+                onClick={() => removePlateFromList(plate, "motorbike")}
               >
-                Cập nhật
+                Xóa
               </Button>
+            </li>
+          ))}
+        </ul>
+
+        <h3>Danh sách ô tô</h3>
+        <ul>
+          {cars.map((plate, index) => (
+            <li key={index} style={{ display: "flex", alignItems: "center" }}>
+              {plate}
               <Button
-                className="btn-edit-child-2"
-                type="primary"
-                onClick={onClickCloseEdit}
+                type="danger"
+                size="small"
+                style={{ marginLeft: "10px" }}
+                onClick={() => removePlateFromList(plate, "car")}
               >
-                Hủy
+                Xóa
               </Button>
-            </div>
-          </div>
-        </form>
+            </li>
+          ))}
+        </ul>
       </div>
-    </div>
+    </Modal>
   );
 };
 

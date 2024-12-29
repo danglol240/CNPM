@@ -23,7 +23,10 @@ const VehicalController = {
       updateVehical: async (req, res) => {
         const { id } = req.params;
         const { roomNumber, motorbikes, cars } = req.body;
-    
+      
+        console.log("Updating vehical with ID:", id);
+        console.log("Request body:", req.body);
+      
         try {
           const updatedVehical = await VehicalModel.findByIdAndUpdate(
             id,

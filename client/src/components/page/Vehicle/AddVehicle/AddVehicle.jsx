@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from "react";
-import { Modal, Form, Input, Select, Button, message, Radio } from "antd";
+import { Modal, Form, Input, Select, Button, message } from "antd";
 import axios from "axios";
 
 const { Option } = Select;
@@ -9,23 +9,53 @@ const AddVehicle = ({ onClickPlus }) => {
   const [licensePlates, setLicensePlates] = useState([""]);
   const [roomNumber, setRoomNumber] = useState("");
   const [rooms, setRooms] = useState([]);
-  const [inputRoomType, setInputRoomType] = useState("select");
+  const [exrooms, exsetRooms] = useState([]);
+  
+   // Danh sách phòng từ API
   const [motorbikes, setMotorbikes] = useState([]);
   const [cars, setCars] = useState([]);
 
   useEffect(() => {
-    const fetchRooms = async () => {
+    // Lấy danh sách phòng từ API /vehicalsAddRoom
+    const fetchRoomsFromAddRoom = async () => {
       try {
         const response = await axios.get("http://localhost:8080/vehicalsAddRoom");
         if (response.status === 200) {
           setRooms(response.data.dataRoom);
         }
       } catch (error) {
-        console.error("Error fetching rooms:", error);
+        console.error("Error fetching rooms from AddRoom:", error);
       }
     };
-    fetchRooms();
+
+    // Lấy danh sách phòng từ API /vehicals
+    const fetchRoomsFromVehicals = async () => {
+      try {
+        const response = await axios.get("http://localhost:8080/vehicals");
+        if (response.status === 200) {
+          const existingRooms = response.data.vehicals.map((vehical) => vehical.roomNumber);
+          exsetRooms(() => [...new Set([...existingRooms])]); // Gộp phòng từ 2 nguồn
+        }
+      } catch (error) {
+        console.error("Error fetching rooms from Vehicals:", error);
+        message.error("Không thể tải danh sách phòng hiện có!");
+      }
+    };
+
+    console.log(rooms);
+
+
+    console.log(roomNumber);
+
+    fetchRoomsFromAddRoom();
+    fetchRoomsFromVehicals();
   }, []);
+
+
+  console.log(exrooms);
+
+
+  
 
   const handleAddVehicle = () => {
     if (!vehicleType || !licensePlates.some((plate) => plate) || !roomNumber) {
@@ -43,26 +73,23 @@ const AddVehicle = ({ onClickPlus }) => {
   };
 
   const handleSubmit = async () => {
+    if (exrooms.includes(parseInt(roomNumber))) {
+      message.error(`Phòng ${roomNumber} đã tồn tại! Vui lòng chọn phòng khác.`);
+      return;
+    }
+
     try {
       const response = await axios.post("http://localhost:8080/vehicals", {
-        roomNumber,
+        roomNumber: parseInt(roomNumber),
         motorbikes,
         cars,
       });
-      message.success("Xác nhận thành công!");    
+      message.success("Xác nhận thành công!");
       onClickPlus(); // Đóng modal sau khi gửi dữ liệu thành công
     } catch (error) {
       console.error("Error submitting vehicles:", error);
       message.error("Xác nhận thất bại!");
     }
-  };
-
-  const handleRoomInputChange = (e) => {
-    setRoomNumber(e.target.value);
-  };
-
-  const handleRoomSelectChange = (roomNumber) => {
-    setRoomNumber(roomNumber);
   };
 
   const handleLicensePlateChange = (index, value) => {
@@ -92,37 +119,18 @@ const AddVehicle = ({ onClickPlus }) => {
     <Modal title="Thêm xe" visible={true} onCancel={onClickPlus} footer={null}>
       <Form layout="vertical">
         <Form.Item label="Phòng">
-          <Radio.Group
-            onChange={(e) => setInputRoomType(e.target.value)}
-            value={inputRoomType}
-            style={{ marginBottom: "10px" }}
+          <Select
+            placeholder="Chọn phòng"
+            value={roomNumber}
+            onChange={(value) => setRoomNumber(value)}
+            style={{ width: "100%" }}
           >
-            <Radio value="select">Chọn số phòng</Radio>
-            <Radio value="input">Nhập số phòng</Radio>
-          </Radio.Group>
-
-          {inputRoomType === "select" ? (
-            <Select
-              placeholder="Chọn phòng"
-              value={roomNumber}
-              onChange={handleRoomSelectChange}
-              style={{ width: "100%" }}
-            >
-              {rooms.map((room) => (
-                <Option key={room} value={room}>
-                  Phòng {room}
-                </Option>
-              ))}
-            </Select>
-          ) : (
-            <Input
-              type="number"
-              placeholder="Nhập số phòng"
-              value={roomNumber}
-              onChange={handleRoomInputChange}
-              style={{ width: "100%" }}
-            />
-          )}
+            {rooms.map((room) => (
+              <Option key={room} value={room}>
+                Phòng {room}
+              </Option>
+            ))}
+          </Select>
         </Form.Item>
         <Form.Item label="Loại xe">
           <Select
