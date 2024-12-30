@@ -102,10 +102,11 @@ const FeeDetailsModal = ({ visible, onClose, fee, updateFee }) => {
               placeholder="Chọn loại phí"
               style={{ padding: "0px", borderRadius: "8px" }}
             >
-              <Option value="Phí dịch vụ">Phí Dịch Vụ</Option>
+            <Option value="Phí dịch vụ">Phí Dịch Vụ</Option>
             <Option value="Phí phòng">Phí Phòng</Option>
             <Option value="Phí phương tiện">Phí Phương Tiện</Option>
             <Option value="Phí tính theo người">Phí Tính Theo Người</Option>
+            <Option value="Phí từ thiện">Phí Từ thiện</Option>
             </Select>
 
             <Input
@@ -129,10 +130,10 @@ const FeeDetailsModal = ({ visible, onClose, fee, updateFee }) => {
           </div>
         </div>
         <div className={styles.rightColumn}>
+          <h1> Chọn số Phòng để thêm phí mới :</h1>
           <div>
             <Select
               className={styles.selectField}
-              placeholder="Chọn số phòng mới"
               value={newRoom}
               onChange={(value) => setNewRoom(value)}
               style={{ padding: "0px", borderRadius: "8px" }}
@@ -151,11 +152,11 @@ const FeeDetailsModal = ({ visible, onClose, fee, updateFee }) => {
               Thêm Phòng
             </Button>
           </div>
+          <h1> Hủy đóng phí Phòng :</h1>
           <div className={styles.inputGroup}>
             <Select
               mode="multiple"
               className={styles.selectField}
-              placeholder="Chọn phòng chưa đóng phí"
               value={editedFee.unpaidRooms}
               onChange={handleRoomChange}
               popupMatchSelectWidth={false}

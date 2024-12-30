@@ -153,7 +153,6 @@ tbody td .btn-table-department {
 thead tr td[colSpan] {
     text-align: center; /* Căn giữa thông báo không tìm thấy dữ liệu */
     font-size: 1vw;
-    font-weight: bold;
     background-color: #f9f9f9;
     padding: 15px;
     border: 1px solid #525252;

@@ -1,51 +1,59 @@
+.modalContent{
+  width: 100%;
+}
+
 .detailsContainer {
-    display: grid;
-    grid-template-columns: 1fr 1fr; /* Giữ nguyên phân chia hai cột */
-    column-gap: 24px; /* Tăng khoảng cách giữa các cột */
-    row-gap: 20px; /* Tăng khoảng cách giữa các hàng */
-    margin-top: 20px;
+  display: flex;
+  flex-direction: column;
+  gap: 20px; /* Increase the gap between items */
+  margin-top: 20px;
+  font-size: 16px;
 }
 
 .inputField, .selectField {
-    width: 100%;
-    padding: 10px;
-    margin-bottom: 16px; /* Tăng khoảng cách dưới mỗi trường nhập */
-    border: 1px solid #ccc;
-    border-radius: 4px; /* Viền tròn */
-    box-shadow: inset 0 1px 3px rgba(0, 0, 0, 0.1);
+  width: 100%;
+  padding: 10px;
+  margin-bottom: 3%; /* Increase the bottom margin */
+  border: 1px solid #ccc;
+  border-radius: 4px; /* Rounded corners */
+  box-shadow: inset 0 1px 3px rgba(0, 0, 0, 0.1);
 }
 
 .roomTags {
-    display: flex;
-    flex-wrap: wrap;
-    gap: 8px;
-    margin-top: 16px; /* Tăng khoảng cách phía trên các thẻ */
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  margin-top: 16px; /* Increase the top margin */
 }
 
 .addButton {
-    margin-top: 12px; /* Đảm bảo có khoảng trống phía trên nút */
-    border: none;
-    background-color: #1890ff;
-    color: white;
-    padding: 8px 16px;
-    border-radius: 4px;
-    cursor: pointer;
-    box-shadow: 0 2px 8px rgba(24, 144, 255, 0.5);
+  border: none;
+  background-color: #1890ff;
+  color: white;
+  padding: 8px 16px;
+  border-radius: 4px;
+  font-size: 16px;
+  cursor: pointer;
+  box-shadow: 0 2px 8px rgba(24, 144, 255, 0.5);
 }
+
+.rightColumn h1{
+  font-size: 16px;
+}
+
 /* FeeDetailsModal.module.css */
 .customSelect {
-    width: 100%;
-  }
-  
-  .customSelect .ant-select-selector {
-    padding-right: 8px; /* Điều chỉnh khoảng cách padding bên phải nếu cần */
-    height: 40px; /* Đặt chiều cao mong muốn cho ô select */
-    display: flex;
-    align-items: center; /* Căn giữa các items bên trong vertically */
-  }
-  
-  .customSelect .ant-select-arrow {
-    color: #1890ff; /* Màu sắc cho mũi tên, bạn có thể thay đổi nếu muốn */
-    font-size: 16px; /* Kích thước lớn hơn cho mũi tên */
-  }
+  width: 100%;
+}
 
+.customSelect .ant-select-selector {
+  padding-right: 8px; /* Adjust padding-right if needed */
+  height: 50px; /* Set desired height for the select box */
+  display: flex;
+  align-items: center; /* Vertically center items inside */
+}
+
+.customSelect .ant-select-arrow {
+  color: #1890ff; /* Color for the arrow, you can change if needed */
+  font-size: 16px; /* Larger size for the arrow */
+}

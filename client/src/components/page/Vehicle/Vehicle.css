@@ -40,20 +40,13 @@
     text-align: center;
     font-size: 50px;
     color: whitesmoke;
-}
-
-.depart-2 {
-    display: flex;
-    flex-wrap: wrap; /* Cho phép xuống hàng nếu không đủ không gian */
     justify-content: center;
-    gap: 10px;
-    margin-left: 0;
-    width: 100%;
 }
 
-.depart-statistical {
+.vehicle-statistical {
     border-radius: 20px;
     width: 100%;
+    margin-left: 38%;
     max-width: 400px; /* Giới hạn chiều rộng */
     height: auto;
     background-color: #b0e0e6;
@@ -90,7 +83,7 @@
     text-align: center;
 }
 
-.search-vehicle{
+.search-vehicals{
     display: flex;
     flex-direction: row;
     gap: 30px;

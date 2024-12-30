@@ -107,6 +107,7 @@ const AddFeeForm = ({ visible, onClose, updateFees }) => {
             <Option value="Phí phòng">Phí Phòng</Option>
             <Option value="Phí phương tiện">Phí Phương Tiện</Option>
             <Option value="Phí tính theo người">Phí Tính Theo Người</Option>
+            <Option value="Phí từ thiện">Phí Từ thiện</Option>
           </Select>
         </Form.Item>
         <Form.Item label="Giá Phí">

@@ -15,6 +15,7 @@ const Vehicle = () => {
   const [openPlus, setOpenPlus] = useState(false);
   const [openEdit, setOpenEdit] = useState(false);
   const [editData, setEditData] = useState(null); // Thêm useState cho editData
+  const [totalVehicles, setTotalVehicles] = useState(0);
 
   const fetchVehicals = async () => {
     try {
@@ -35,6 +36,11 @@ const Vehicle = () => {
 
   const toggleDropdown = () => setIsOpen(!isOpen);
 
+  const calculateTotal = (data) => {
+    // Tính tổng số phương tiện từ danh sách phương tiện
+    return data.reduce((total, item) => total + item.motorbikes.length + item.cars.length, 0);
+  };
+
   const handleSelect = (option) => {
     setSelectedOption(option);
     setIsOpen(false);
@@ -50,6 +56,10 @@ const Vehicle = () => {
       fetchVehicals(); // Cập nhật danh sách xe sau khi thêm mới
     }
   };
+
+  useEffect(() => {
+    setTotalVehicles(calculateTotal(vehicalsData));
+  }, [vehicalsData]);
 
   const filterData = (value) => {
     if (!value) return vehicalsData;
@@ -110,6 +120,9 @@ const Vehicle = () => {
       {openEdit && <EditVehicle onClickCloseEdit={onClickCloseEdit} editData={editData} />}
       <div className="vehicals-container">
         <h2>Phương Tiện</h2>
+        <div className="vehicle-statistical">
+          <p>Tổng số phương tiện trong căn hộ : {totalVehicles}</p>
+        </div>
         <Button
           className="btn-plus-vehicle"
           type="primary"

@@ -304,7 +304,6 @@ const PlusPeople = ({ onClickPlus }) => {
               style={{ marginBottom: "10px" }}
             >
               <Radio value="select">Chọn số phòng</Radio>
-              <Radio value="input">Nhập số phòng</Radio>
             </Radio.Group>
 
             {inputRoomType === "select" ? (

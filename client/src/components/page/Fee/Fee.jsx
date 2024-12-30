@@ -76,6 +76,11 @@ const Fee = () => {
         return dataDepartment.filter((item) =>
           item.endDate.toLowerCase().includes(value.toLowerCase())
         );
+      case "Trạng thái": // Thêm logic kiểm tra trạng thái
+        return dataDepartment.filter((item) => {
+          const statusText = CheckFeeStatus(item.unpaidRooms, false).text;
+          return statusText.toLowerCase().includes(value.toLowerCase());
+        });
       default:
         return dataDepartment;
     }
@@ -185,6 +190,7 @@ const Fee = () => {
                   "Giá phí",
                   "Ngày bắt đầu",
                   "Ngày kết thúc",
+                  "Trạng thái",
                 ].map((option) => (
                   <li key={option} onClick={() => handleSelect(option)}>
                     {option}
