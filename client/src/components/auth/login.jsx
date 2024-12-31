@@ -1,23 +1,24 @@
 import React, { useState } from "react";
 import { Input, Button, message } from "antd";
 import { useNavigate } from "react-router-dom";
+import { useAuth } from "../../context/AuthContext"; // Đảm bảo đường dẫn đúng với AuthContext
 
 const Login = () => {
   const navigate = useNavigate();
+  const { login, changePassword } = useAuth(); // Lấy hàm từ useAuth
   const [value, setValue] = useState({
     userName: "",
     password: "",
-    defaultPassword: "123"
   });
-  const [changePassword, setChangePassword] = useState({
+  const [passwordFields, setPasswordFields] = useState({
     oldPassword: "",
     newPassword: "",
     confirmNewPassword: "",
   });
   const [isChangingPassword, setIsChangingPassword] = useState(false);
-  const [touched, setTouched] = useState({});
   const [loading, setLoading] = useState(false);
   const [errorLogin, setErrorLogin] = useState(false);
+  const [touched, setTouched] = useState({});
 
   const onBlurField = (field) => () => {
     setTouched({ ...touched, [field]: true });
@@ -29,7 +30,7 @@ const Login = () => {
   };
 
   const onChangePasswordField = (field) => (e) => {
-    setChangePassword({ ...changePassword, [field]: e.target.value });
+    setPasswordFields({ ...passwordFields, [field]: e.target.value });
   };
 
   const check = (field) => {
@@ -38,15 +39,15 @@ const Login = () => {
     return true;
   };
 
-  const submit = async (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
     setLoading(true);
-
-    // Giả lập API call đăng nhập
+  
     setTimeout(() => {
-      if (value.userName === "admin@1" && value.password === value.defaultPassword) {
+      const isSuccess = login(value.userName, value.password); // Sử dụng login từ AuthContext
+      console.log("Mật khẩu đăng nhập:", value.password);
+      if (isSuccess) {
         message.success("Đăng nhập thành công");
-        sessionStorage.setItem("checkLogin", true);
         navigate("/");
       } else {
         setErrorLogin(true);
@@ -54,26 +55,30 @@ const Login = () => {
       setLoading(false);
     }, 1500);
   };
+  
 
-  const handleChangePassword = async () => {
-    if (changePassword.newPassword !== changePassword.confirmNewPassword) {
+  
+
+  const handlePasswordChange = async () => {
+    const { oldPassword, newPassword, confirmNewPassword } = passwordFields;
+
+    if (newPassword !== confirmNewPassword) {
       message.error("Mật khẩu mới và xác nhận mật khẩu không khớp.");
       return;
     }
 
-    if (changePassword.oldPassword !== value.defaultPassword) {
-      message.error("Mật khẩu cũ không đúng.");
-      return;
+    try {
+      await changePassword(oldPassword, newPassword);
+      message.success("Mật khẩu đã được cập nhật thành công.");
+      setPasswordFields({
+        oldPassword: "",
+        newPassword: "",
+        confirmNewPassword: "",
+      });
+      setIsChangingPassword(false);
+    } catch (error) {
+      message.error(error.message || "Đổi mật khẩu thất bại.");
     }
-
-    setValue({ ...value, defaultPassword: changePassword.newPassword });
-    setChangePassword({
-      oldPassword: "",
-      newPassword: "",
-      confirmNewPassword: "",
-    });
-    message.success("Mật khẩu đã được cập nhật thành công.");
-    setIsChangingPassword(false);
   };
 
   return (
@@ -85,7 +90,7 @@ const Login = () => {
 
             {!isChangingPassword ? (
               // Form Đăng nhập
-              <form className="form-login" onSubmit={submit}>
+              <form className="form-login" onSubmit={handleSubmit}>
                 <Input
                   value={value.userName}
                   onChange={onChangeValue("userName")}
@@ -132,21 +137,21 @@ const Login = () => {
               // Form Đổi mật khẩu
               <div className="form-login">
                 <Input
-                  value={changePassword.oldPassword}
+                  value={passwordFields.oldPassword}
                   onChange={onChangePasswordField("oldPassword")}
                   type="password"
                   className="input-login"
                   placeholder="Mật khẩu cũ"
                 />
                 <Input
-                  value={changePassword.newPassword}
+                  value={passwordFields.newPassword}
                   onChange={onChangePasswordField("newPassword")}
                   type="password"
                   className="input-login"
                   placeholder="Mật khẩu mới"
                 />
                 <Input
-                  value={changePassword.confirmNewPassword}
+                  value={passwordFields.confirmNewPassword}
                   onChange={onChangePasswordField("confirmNewPassword")}
                   type="password"
                   className="input-login"
@@ -155,7 +160,7 @@ const Login = () => {
                 <Button
                   className="btn-login"
                   type="primary"
-                  onClick={handleChangePassword}
+                  onClick={handlePasswordChange}
                   loading={loading}
                 >
                   Đổi mật khẩu

@@ -27,7 +27,7 @@ const Navbar = () => {
 
   return (
     <div className="navbar">
-      <div className="icon-nav-all">
+      <div className="icon-nav-all" onClick={() => navigate("/change-password")} style={{ cursor: "pointer" }}>
         <img src="/pic/KienDInh.jfif" className="icon-nav" size={50}/>
         <h1>Admin</h1>
       </div>

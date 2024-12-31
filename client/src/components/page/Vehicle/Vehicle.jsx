@@ -71,6 +71,14 @@ const Vehicle = () => {
           (item) =>
             item.motorbikes.length + item.cars.length == parseInt(value, 10)
         );
+      case "Biển số xe máy":
+        return vehicalsData.filter((item) =>
+          item.motorbikes.some((plate) => plate.includes(value))
+        );
+      case "Biển số ô tô":
+        return vehicalsData.filter((item) =>
+          item.cars.some((plate) => plate.includes(value))
+        );
       default:
         return vehicalsData;
     }
@@ -146,7 +154,7 @@ const Vehicle = () => {
             </button>
             {isOpen && (
               <ul className="dropdown-content">
-                {["Lựa chọn tìm kiếm", "Số phòng", "Số lượng xe"].map((option) => (
+                {["Lựa chọn tìm kiếm", "Số phòng", "Số lượng xe","Biển số xe máy","Biển số ô tô"].map((option) => (
                   <li key={option} onClick={() => handleSelect(option)}>
                     {option}
                   </li>
