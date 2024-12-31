@@ -10,12 +10,28 @@ import EditDepartment from "./EditDepartment/EditDepartment";
 const Department = () => {
   const [dataDepartment, setDataDepartment] = useState([]);
   const [valuesearchData, setValuesearchData] = useState("");
+  const [vehicalsData, setVehicalsData] = useState([]);
   const [selectedOption, setSelectedOption] = useState("Lựa chọn tìm kiếm");
   const [isOpen, setIsOpen] = useState(false);
   const [openPlus, setOpenPlus] = useState(false);
   const [openEdit, setOpenEdit] = useState(false);
   const [editData, setEditData] = useState([]);
   const [dataPeople, setDataPeople] = useState([]);
+
+  useEffect(() => {
+    const fetchVehicals = async () => {
+      try {
+        const { data } = await axios.get("http://localhost:8080/vehicals");
+        setVehicalsData(data.vehicals);
+      } catch (error) {
+        console.error("Error fetching vehicals data:", error);
+      }
+    };
+
+    fetchVehicals();
+  }, []);
+
+console.log(vehicalsData);
 
   useEffect(() => {
     const fetchData = async () => {
@@ -98,6 +114,11 @@ const Department = () => {
   const searchData = filterData(valuesearchData);
 
   const showDeleteConfirm = (item) => {
+    const roomExists = vehicalsData.some((vehical) => vehical.roomNumber === item.roomNumber);
+    if (roomExists) {
+      message.error("Không thể xóa phòng này vì vẫn còn phương tiện trong phòng.");
+      return;
+    }
     Modal.confirm({
       title: "Bạn có chắc chắn muốn xóa phòng này?",
       content: `Phòng: ${item.roomNumber}, Tầng: ${item.floor}`,
