@@ -112,6 +112,19 @@ const PeopleController = {
   
       const currentRoomNumber = existingPerson.roomNumber; // Lấy phòng hiện tại
   
+// Kiểm tra nếu số lượng người trong phòng lớn hơn 1 và id là purchaser id thì không thể update phòng
+if (currentRoomNumber && currentRoomNumber !== roomNumber) {
+  const currentRoom = await DepartmentModel.findOne({ roomNumber: currentRoomNumber });
+  if (currentRoom && currentRoom.purchaser.toString() === id) {
+    const occupants = await PeopleModel.countDocuments({ roomNumber: currentRoomNumber });
+    if (occupants > 1) {
+      return res.status(400).send({
+        message: "Không thể cập nhật phòng nếu số lượng người trong phòng lớn hơn 1 và người này là chủ sở hữu.",
+      });
+    }
+  }
+}
+
       // Cập nhật thông tin người
       const updatedPeople = await PeopleModel.findByIdAndUpdate(
         id,
@@ -141,13 +154,7 @@ const PeopleController = {
           );
         }
       }
-      // if (currentRoomNumber && currentRoomNumber !== roomNumber) {
-      //   // Xóa thông tin chủ sở hữu khỏi phòng cũ
-      //   oldRoom = await DepartmentModel.findOneAndUpdate(
-      //     { roomNumber: currentRoomNumber, purchaser: id },
-      //     { purchaser: null, status: "Trống" }
-      //   );
-      // }
+      
   
       if (roomNumber) {
         const newRoom = await DepartmentModel.findOne({ roomNumber });
@@ -161,20 +168,7 @@ const PeopleController = {
           throw new Error("Phòng mới không tồn tại hoặc đã được thuê.");
         }
       }
-      // if (roomNumber) {
-
-        
-
-      //   newRoom = await DepartmentModel.findOneAndUpdate(
-      //     { roomNumber: roomNumber }, // Tìm phòng mới theo roomNumber
-      //     { purchaser: id, status: "Đã thuê" }, // Cập nhật chủ sở hữu
-      //     { new: true } // Trả về dữ liệu sau khi cập nhật
-      //   );
-  
-      //   if (!newRoom) {
-      //     throw new Error("Phòng mới không tồn tại hoặc đã được thuê.");
-      //   }
-      // }
+     
   
       res.status(200).send({
         message: "Cập nhật thông tin người và phòng thành công.",
@@ -190,29 +184,53 @@ const PeopleController = {
 
   deletePeople: async (req, res) => {
     const { id } = req.params;
-
+  
     try {
+      // Kiểm tra xem người này có phải là chủ sở hữu phòng không
+      const currentPerson = await PeopleModel.findById(id);
+      if (!currentPerson) {
+        return res.status(404).send({ message: "Người dùng không tồn tại" });
+      }
+  
+      // Tìm phòng hiện tại của người này
+      const currentRoom = await DepartmentModel.findOne({ purchaser: id });
+      if (currentRoom) {
+        // Đếm số lượng người đang sống trong phòng
+        const occupants = await PeopleModel.countDocuments({
+          roomNumber: currentRoom.roomNumber,
+        });
+        
+        // Nếu phòng có hơn 1 người, không cho phép xóa chủ sở hữu
+        if (occupants > 1) {
+          return res.status(400).send({
+            message: "Không thể xóa chủ sở hữu nếu phòng còn hơn 1 người",
+          });
+        }
+  
+        // Cập nhật phòng về trạng thái "Trống" nếu chủ sở hữu bị xóa
+        await DepartmentModel.findByIdAndUpdate(currentRoom._id, {
+          purchaser: null,
+          status: "Trống",
+        });
+      }
+  
+      // Xóa người dùng
       const deletedPerson = await PeopleModel.findByIdAndDelete(id);
       if (!deletedPerson) {
-        throw new Error("Person not found");
+        throw new Error("Người dùng không tồn tại");
       }
-
-      const oldRoom = await DepartmentModel.findOneAndUpdate(
-        { purchaser: id },
-        { purchaser: null, status: "Trống" }
-      );
-
+  
       res.status(200).send({
-        message: "Person and associated room deleted successfully",
+        message: "Người dùng và thông tin phòng liên quan đã được xóa thành công",
         person: deletedPerson,
-        room: oldRoom,
+        room: currentRoom || null,
       });
     } catch (error) {
       console.error(
-        "Error occurred while deleting person and updating room:",
+        "Lỗi khi xóa người dùng và cập nhật phòng:",
         error
       );
-      res.status(500).send({ message: "Internal server error" });
+      res.status(500).send({ message: "Lỗi hệ thống" });
     }
   },
 
