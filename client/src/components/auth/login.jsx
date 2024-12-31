@@ -87,9 +87,6 @@ const Login = () => {
         <div className="login-all">
           <div className="form-login-all">
             <h3>QUẢN LÝ CHUNG CƯ BLUEMOON</h3>
-
-            {!isChangingPassword ? (
-              // Form Đăng nhập
               <form className="form-login" onSubmit={handleSubmit}>
                 <Input
                   value={value.userName}
@@ -126,53 +123,7 @@ const Login = () => {
                 >
                   Đăng nhập
                 </Button>
-                <Button
-                  type="link"
-                  onClick={() => setIsChangingPassword(true)}
-                >
-                  Đổi mật khẩu
-                </Button>
               </form>
-            ) : (
-              // Form Đổi mật khẩu
-              <div className="form-login">
-                <Input
-                  value={passwordFields.oldPassword}
-                  onChange={onChangePasswordField("oldPassword")}
-                  type="password"
-                  className="input-login"
-                  placeholder="Mật khẩu cũ"
-                />
-                <Input
-                  value={passwordFields.newPassword}
-                  onChange={onChangePasswordField("newPassword")}
-                  type="password"
-                  className="input-login"
-                  placeholder="Mật khẩu mới"
-                />
-                <Input
-                  value={passwordFields.confirmNewPassword}
-                  onChange={onChangePasswordField("confirmNewPassword")}
-                  type="password"
-                  className="input-login"
-                  placeholder="Xác nhận mật khẩu mới"
-                />
-                <Button
-                  className="btn-login"
-                  type="primary"
-                  onClick={handlePasswordChange}
-                  loading={loading}
-                >
-                  Đổi mật khẩu
-                </Button>
-                <Button
-                  type="link"
-                  onClick={() => setIsChangingPassword(false)}
-                >
-                  Quay lại đăng nhập
-                </Button>
-              </div>
-            )}
           </div>
         </div>
       </div>
