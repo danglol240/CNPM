@@ -7,6 +7,7 @@ const Login = () => {
   const [value, setValue] = useState({
     userName: "",
     password: "",
+    defaultPassword: "123"
   });
   const [changePassword, setChangePassword] = useState({
     oldPassword: "",
@@ -43,7 +44,7 @@ const Login = () => {
 
     // Giả lập API call đăng nhập
     setTimeout(() => {
-      if (value.userName === "admin@1" && value.password === "123") {
+      if (value.userName === "admin@1" && value.password === value.defaultPassword) {
         message.success("Đăng nhập thành công");
         sessionStorage.setItem("checkLogin", true);
         navigate("/");
@@ -55,32 +56,24 @@ const Login = () => {
   };
 
   const handleChangePassword = async () => {
-    const { oldPassword, newPassword, confirmNewPassword } = changePassword;
-
-    // Kiểm tra điều kiện hợp lệ
-    if (!oldPassword || !newPassword || !confirmNewPassword) {
-      return message.error("Vui lòng nhập đầy đủ các trường.");
-    }
-    if (newPassword !== confirmNewPassword) {
-      return message.error("Mật khẩu mới và xác nhận mật khẩu không khớp.");
-    }
-    if (oldPassword === newPassword) {
-      return message.error("Mật khẩu mới không được giống mật khẩu cũ.");
+    if (changePassword.newPassword !== changePassword.confirmNewPassword) {
+      message.error("Mật khẩu mới và xác nhận mật khẩu không khớp.");
+      return;
     }
 
-    setLoading(true);
+    if (changePassword.oldPassword !== value.defaultPassword) {
+      message.error("Mật khẩu cũ không đúng.");
+      return;
+    }
 
-    // Gửi yêu cầu đổi mật khẩu (giả lập API call)
-    setTimeout(() => {
-      message.success("Đổi mật khẩu thành công!");
-      setChangePassword({
-        oldPassword: "",
-        newPassword: "",
-        confirmNewPassword: "",
-      });
-      setIsChangingPassword(false);
-      setLoading(false);
-    }, 1500);
+    setValue({ ...value, defaultPassword: changePassword.newPassword });
+    setChangePassword({
+      oldPassword: "",
+      newPassword: "",
+      confirmNewPassword: "",
+    });
+    message.success("Mật khẩu đã được cập nhật thành công.");
+    setIsChangingPassword(false);
   };
 
   return (
