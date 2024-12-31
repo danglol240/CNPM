@@ -69,7 +69,7 @@ const EditPeople = ({ onClickCloseEdit, editData }) => {
     } catch (error) {
       console.log(error);
       message.error(
-        "Không thể thay đổi số phòng khi người này chưa thanh toán hết các khoản phí"
+        "Không thể thay đổi số phòng khi người này chưa thanh toán hết các khoản phí hoặc người này là chủ sở hữu và phòng có nhiều hơn 1 người"
       );
     }
     onClickCloseEdit();
