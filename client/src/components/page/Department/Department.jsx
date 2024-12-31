@@ -142,7 +142,7 @@ console.log(vehicalsData);
           }
         } catch (error) {
           console.error("Error deleting the item:", error);
-          message.error("Xóa phòng thất bại!");
+          message.error("Bạn chỉ có thể xóa phòng không ai ở !");
         }
       },
       onCancel() {
