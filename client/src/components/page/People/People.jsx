@@ -136,7 +136,7 @@ const People = () => {
         } catch (error) {
           console.error("Error deleting the item:", error);
           message.error(
-            "Không thể xóa người dùng khi họ chưa thanh toán hết các khoản phí"
+            Không thể xóa người này khi họ chưa thanh toán hết các khoản phí hoặc người này là chủ sở hữu và còn nhiều người trong phòng"
           );
         }
       },
