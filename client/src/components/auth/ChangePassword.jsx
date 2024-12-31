@@ -41,6 +41,7 @@ const ChangePassword = () => {
   
 
   return (
+  <div className="background">
     <div className="change-password-container">
       <h2>Đổi Mật Khẩu</h2>
       <Form>
@@ -70,6 +71,7 @@ const ChangePassword = () => {
         </Button>
       </Form>
     </div>
+  </div>
   );
 };
 
